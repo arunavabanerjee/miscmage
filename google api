@@ -1,0 +1,92 @@
+
+    <li>
+     <div class="form-group clearfix"> 
+      <div class="col-sm-2">
+         <label for="postcode" class="required"><em>*</em><?php echo Mage::helper('core')->__('Postcode') ?></label>
+      </div>
+      <div class="col-sm-10">
+        <input name="postcode" id="postcode" title="<?php echo Mage::helper('core')->__('Postcode') ?>" value="<?php echo Mage::getSingleton('core/session')->getPostcode(); ?>" class="input-text validate-zip-india form-control required-entry" type="text" />
+      </div>
+     </div>  
+    </li>
+
+<script type="text/javascript">
+//<![CDATA[
+ var contactForm = new VarienForm('popupForm', true);
+//]]>
+</script>
+
+<script>
+$j(function() {
+	// OnKeyDown Function
+	$j("#postcode").keyup(function() { 
+		var zip_in = $j(this);
+		//var zip_box = $j('#zipbox');
+		//if (zip_in.val().length<6) {  zip_box.removeClass('error success'); }
+		//else if ( zip_in.val().length>6) { zip_box.addClass('error').removeClass('success'); }
+		//else if ((zip_in.val().length == 6) ) {
+		if ((zip_in.val().length == 6) ) { 
+			// Make HTTP Request
+			$j.ajax({
+				//asyn: false,
+				//url: "http://api.zippopotam.us/IN/" + zip_in.val(),
+				url: "http://maps.googleapis.com/maps/api/geocode/json?address="+ zip_in.val() +"&sensor=false&components=country:IN",
+				cache: false,
+				dataType: "json",
+				type: "GET",
+			  	success: function(result, success) {
+					//console.log(result);
+					// US Zip Code Records Officially Map to only 1 Primary Location
+					//-- zapotam -- //
+					//places = result['places'][0];
+					//$j("#city").val(places['place name']);
+					//$j("#state").val(places['state']);
+					//lattitude = places['latitude'];
+					//longitude = places['longitude'];
+					//zip_box.addClass('success').removeClass('error');
+
+					//-- google --//
+					//$j("#city").val(result.results[0].address_components[1].long_name);
+					//$j("#state").val(result.results[0].address_components[3].long_name);
+					//aplaceid = result.results[0].place_id;
+					lattitude = result.results[0].geometry.location.lat; 
+					longitude = result.results[0].geometry.location.lng; 
+					//console.log(lattitude); console.log(longitude);
+
+					$j.ajax({
+						//asyn: false,
+						url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lattitude + "," + longitude + "&sensor=true", 
+						//url: "https://maps.googleapis.com/maps/api/place/details/json?placeid="+ aplaceid + "&key=AIzaSyCBx-_yd_s3Fs3ITpYGmdwipd8RbbTcPtg",
+						cache: false,
+						dataType: "json",
+						type:"GET", 
+						success: function(resultpl, successpl){
+							//console.log(resultpl);
+							asize = resultpl.results[0].address_components.length;
+							adminlevel2 = resultpl.results[0].address_components[asize-4].long_name;
+							adminlevel1 = resultpl.results[0].address_components[asize-3].long_name;
+							$j("#city").val(adminlevel2);							
+							$j("#state").val(adminlevel1);
+						},
+						error: function(resultpl, successpl){
+							console.log(resultpl);
+							console.log(successpl);
+						}
+					});
+		
+				},
+				error: function(result, success) {
+					console.log(result);
+					console.log(success);
+				},
+				complete: function(result, success) {
+					console.log(result);
+					console.log(success);					
+				}
+			});
+
+		}
+	});
+});
+</script>
+
