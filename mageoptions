@@ -3,7 +3,7 @@
 				
 <?php if($_product->getOptions()){ ?>
 <div class="input">
-  	<?php $_Coptions = Mage::helper('core')->decorateArray($_product->getOptions()); 
+    <?php $_Coptions = Mage::helper('core')->decorateArray($_product->getOptions()); 
 	   $blOption = Mage::app()->getLayout()->createBlock("Mage_Catalog_Block_Product_View_Options"); 
 	   $blOption->addOptionRenderer("default","catalog/product_view_options_type_default","catalog/product/view/options/type/default.phtml");
 	   $blOption->addOptionRenderer("text","catalog/product_view_options_type_text","catalog/product/view/options/type/text.phtml");	    	    
