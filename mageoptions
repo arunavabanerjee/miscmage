@@ -18,3 +18,44 @@
     				</dl>
 				</div>
 				<?php } ?>
+
+-------------------------
+
+--- get different orders
+<?php 
+//$completeorders = Mage::getResourceModel('sales/order_collection')
+$completeorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			//->addFieldToFilter('state', array('in' => Mage::getSingleton('sales/order_config')->getVisibleOnFrontStates()))
+			->addFieldToFilter('status', 'complete')
+			->setOrder('created_at', 'desc');
+//var_dump($completeorders); 
+echo 'Completed:'; echo '<br />';
+foreach ($completeorders as $corder){ var_dump( $corder->getData() ); echo '<br />'; }
+
+//$pendingorders = Mage::getResourceModel('sales/order_collection')
+$pendingorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			//->addFieldToFilter('state', array('in' => Mage::getSingleton('sales/order_config')->getVisibleOnFrontStates()))
+			->addFieldToFilter( 'status', array( array('eq'=>'processing'), array('eq'=>'pending') ) )
+			//->addFieldToFilter('status', 'pending_payment')
+			->setOrder('created_at', 'desc');
+//var_dump($pendingorders); 
+echo 'Pending:'; echo '<br />';
+foreach ($pendingorders as $porder){ var_dump( $porder->getData() ); echo '<br />'; }
+
+//$cancelledorders = Mage::getResourceModel('sales/order_collection')
+$cancelledorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			//->addFieldToFilter('state', array('in' => Mage::getSingleton('sales/order_config')->getVisibleOnFrontStates()))
+			->addFieldToFilter('status', 'canceled')
+			->setOrder('created_at', 'desc');
+//var_dump($cancelledorders); 
+echo 'Cancelled:'; echo '<br />';
+foreach ($cancelledorders as $cnorder){ var_dump( $cnorder->getData() ); echo '<br />'; }
+?>
+
+
