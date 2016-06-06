@@ -109,5 +109,11 @@ foreach ($cancelledorders as $cnorder){ var_dump( $cnorder->getData() ); echo '<
 ?>
 </div>
 
-
+--- add pager to collection
+$pager = $this->getLayout()->createBlock('page/html_pager', 'custom.pager');
+$pager->setAvailableLimit(array(5=>5,10=>10,20=>20,'all'=>'all'));
+$pager->setCollection($this->getCollection());
+$this->setChild('pager', $pager);
+$this->getCollection()->load();
+[http://excellencemagentoblog.com/blog/2011/10/18/magento-collection-paging/]
 
