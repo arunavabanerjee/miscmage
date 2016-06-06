@@ -117,3 +117,12 @@ $this->setChild('pager', $pager);
 $this->getCollection()->load();
 [http://excellencemagentoblog.com/blog/2011/10/18/magento-collection-paging/]
 
+----- html pager to a collection
+$custom_collection = Mage::getModel('devins_module/entity')->getCollection();
+$pager = $this->getLayout()->createBlock('page/html_pager', 'custom.pager');
+$pager->setAvailableLimit(array(15=>15));
+$pager->setCollection($custom_collection);
+echo $pager;
+
+
+
