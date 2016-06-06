@@ -124,5 +124,11 @@ $pager->setAvailableLimit(array(15=>15));
 $pager->setCollection($custom_collection);
 echo $pager;
 
+----- html pager
+$pager = $this->getLayout()->createBlock('page/html_pager', 'custom.pager');
+$pager->setAvailableLimit(array(10 => 10, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
+$pager->setCollection($pendingorders); echo $pager->toHtml();
+
+
 
 
