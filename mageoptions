@@ -129,6 +129,15 @@ $pager = $this->getLayout()->createBlock('page/html_pager', 'custom.pager');
 $pager->setAvailableLimit(array(10 => 10, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
 $pager->setCollection($pendingorders); echo $pager->toHtml();
 
-
+----- payment and address from order
+  $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />';
+   
+   //Get the id of the orders shipping address 
+   $shippingId = $_porder->getShippingAddress()->getId(); 
+   // Get shipping address data using the id 
+   $address = Mage::getModel('sales/order_address')->load($shippingId); 
+   // Display the shipping address data array on screen var_dump($address);
+   print_r( $address->getData() );
+<?php echo $payment_method = $_porder->getPayment()->getMethodInstance()->getTitle(); ?>
 
 
