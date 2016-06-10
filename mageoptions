@@ -154,3 +154,4 @@ echo get_class($product); -- Will return the class name.
 var_dump(get_class_methods($product));
 
 
+
