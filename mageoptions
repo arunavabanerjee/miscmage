@@ -140,4 +140,13 @@ $pager->setCollection($pendingorders); echo $pager->toHtml();
    print_r( $address->getData() );
 <?php echo $payment_method = $_porder->getPayment()->getMethodInstance()->getTitle(); ?>
 
+----- get all mathods for an object
+$class_name = get_class($object);
+$methods = get_class_methods($class_name);
+echo "Methods for class $class_name \n<br />\n";
+foreach($methods as $method)
+{
+    var_dump($method);
+}
+
 
