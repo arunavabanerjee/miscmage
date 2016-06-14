@@ -1,0 +1,43 @@
+
+<div class="modal fade" id="frontModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Enter State, City & Postcode</h4>
+      </div>
+      <div class="modal-body">
+        <?php echo $this->getLayout()->createBlock('core/template')->setTemplate('contacts/popupform.phtml')->toHtml(); ?> 
+	<?php echo Mage::app()->getLayout()->createBlock('customer/address_new')->setTemplate('customer/form/address.phtml')->toHtml(); ?>
+	<?php echo Mage::app()->getLayout()->createBlock('customer/address_book')->setTemplate('customer/address/book.phtml')->toHtml(); ?>
+      </div>
+      <!--<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+      </div>-->
+    </div>
+  </div>
+</div>
+<script>
+$j(window).load(function(){
+    $j('#frontModal').modal('show');
+    $j("#status").fadeOut();
+    // will fade out the whole DIV that covers the website.
+    $j("#preloader2").delay(1000).fadeOut("slow");
+});
+</script>
+<script>
+//alert('thjis');
+$j('#frontModal #popupForm').submit(function(){
+   //alert('this');
+   $j("#status").fadeOut();
+   // will fade out the whole DIV that covers the website.
+   $j("#frontModal #preloader2").delay(6000).fadeOut("slow");
+   location.reload();
+});
+$j("#status").fadeOut();
+// will fade out the whole DIV that covers the website.
+$j("#preloader2").delay(1000).fadeOut("slow");
+//$j("#preloader2").fadeOut("slow");
+</script>
+
