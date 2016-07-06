@@ -42,9 +42,370 @@ $j("#preloader2").delay(1000).fadeOut("slow");
 </script>
 ----------------------------------------------------------------------------------
 
+$currenciesArray = Mage::getModel('core/locale')->getOptionAllCurrencies();
+foreach($currenciesArray as $currency){
+   $currencycurrent = Mage::getModel('core/locale')->currency($currency["value"]);
+   echo  $currencycurrent->getSymbol();
+}
+
+-------------------------------------------------------------------------------------------------------
+
+<?php
+$locale = 'nl_NL';
+
+Mage::app()->getLocale()->setLocaleCode($locale);
+Mage::getSingleton('core/translate')->setLocale($locale)->init('frontend', true);
+?>
+<?php echo $this->__('This is a sentence.') ?>
+
+------------------------------------------------------------------------------------------------------
+
+$locale = 'nl_NL';
+Mage::getSingleton('core/session')->setMyLang($langCode);
+$locale = Mage::getSingleton('core/session')->getMyLang();
 
 
+Mage::getSingleton('core/translate')->setLocale($locale)->init('frontend', true);
 
+$defaultStore = Mage::app()->getStore()->getCode();
+
+Mage::app()->setCurrentStore($defaultStore);
+Mage::app()->getLocale()->setLocale($locale);
+Mage::app()->getTranslator()->init('frontend', true);
+
+$defaultLocale = Mage::app()->getLocale()->getLocaleCode();
+
+------------------------------------------------------------------------------------------------------
+
+$locale = 'nl_NL';
+Mage::getSingleton('core/session')->setMyLang($langCode);
+$locale = Mage::getSingleton('core/session')->getMyLang();
+
+Mage::getSingleton('core/translate')->setLocale($locale)->init('frontend', true);
+
+$defaultStore = Mage::app()->getStore()->getCode();
+Mage::app()->setCurrentStore($defaultStore);
+Mage::app()->getLocale()->setLocale($locale);
+Mage::app()->getTranslator()->init('frontend', true);
+
+$defaultLocale = Mage::app()->getLocale()->getLocaleCode();
+
+-----------------------------------------------------------------------------------------------------
+
+$customerId = Mage::getSingleton('customer/session')->getCustomerId(); echo $customerId;
+$customer = Mage::getModel("customer/customer")->load($customerId);
+var_dump( $customer->getData() ); echo '<br/><br/>';
+
+$customer = Mage::getModel("customer/session"); 
+var_dump( $customer->getData() );get customer locale, magento
+
+$coredata = Mage::getModel('core/session');
+var_dump( $coredata ); 
+
+
+$coresession = Mage::getSingleton('core/session');
+var_dump( $coredata ); 
+
+------------------------------------------------------------------------------------------------------
+// To get the TEXT value of the custom variable:
+Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('custom_variable_code')->getValue('text');
+
+// To get the HTML value of the custom variable:
+Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('custom_variable_code')->getValue('html');
+
+$variable = Mage::getModel('core/variable')->setCode('variable-code')->setName('Variable Name')
+			->setPlainValue(0)->save();
+-------------------------------------------------------------------------------------------------------
+
+=======================================================================================================
+
+print_r( Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('customer_locale')->getData() );
+
+=======================================================================================================
+
+$customer = Mage::getModel("customer/customer");
+var_dump( $customer->getData() ); echo '<br/><br/>';
+
+$customer = Mage::getModel("customer/session"); 
+var_dump( $customer->getData() );
+
+$coredata = Mage::getModel('core/session');
+var_dump( $coredata ); 
+$customerId = Mage::getSingleton('customer/session')->getCustomerId(); echo $customerId;
+$customer = Mage::getModel("customer/customer")->load($customerId);
+$coresession = Mage::getSingleton('core/session');
+var_dump( $coredata );
+
+---------------------------------------------------------------------------------------------------
+
+Mage::getModel('core/locale')->getOptionLocales();
+
+echo  $currencycurrent->getSymbol();
+echo Mage::app()->getLocale()->currency($currency["value"])->getSymbol(); 
+
+---------------------------------------------------------------------------------------------------
+
+<?php //echo Mage::app()->getLayout()->createBlock('plugincompany_contactforms/form_view')->setTemplate('plugincompany/contactforms/form/widget/view.phtml')->toHtml(); ?>
+<?php
+$widget = Mage::getModel('widget/widget_instance')->load(2);
+$widgetBlock = Mage::app()->getLayout()
+                   ->createBlock($widget->getType(),$widget->getTitle(),$widget->getWidgetParameters());
+//echo $widgetBlock->toHtml();
+?>
+
+<?php
+
+$form1 = Mage::getModel('plugincompany_contactforms/form')
+               ->setStoreId(Mage::app()->getStore()->getId())->load(1);
+$formblock = new Plugincompany_Contactforms_Block_Form_Widget_View(); 
+$formblock->setCurrentForm($form1);
+$formblock->setTemplate('plugincompany/contactforms/form/widget/view.phtml');
+echo $formblock->toHtml();
+
+?>
+
+echo Mage::helper('core')->formatDate($_customer['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_SHORT, false, explode('/',(0,2)));
+
+-----------------------------------------------------------------------------------------------------
+
+<?php echo $this->getLayout()->createBlock('core/template')->setTemplate('tm/socialsuite/facebook_like/like.phtml')->toHtml(); ?>
+
+$cPost = $this->getRequest()->getPost();
+if($cPost["econfirmation"] != ""){
+
+$mail = Mage::getModel('core/email');
+$mail->setToName('This Your Name');
+$mail->setToEmail('arunava@sketchwebsolutions.com');
+$mail->setBody('Mail Text / Mail Content');
+$mail->setSubject('Mail Subject');
+$mail->setFromEmail('owner@magentostore.com');
+$mail->setFromName("Msg to Show on Subject");
+$mail->setType('html');// YOu can use Html or text as Mail format
+$mail->send();
+
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+
+$cPost = $this->getRequest()->getPost();
+if($cPost["econfirmation"] != ""){
+
+   $customer = $this->_getSession()->getCustomer();
+   $custPass = $this->_getSession()->getCustomer()->getPasswordHash();
+   $passArr = explode(':', $custPass); 
+   if( $customer->hashPassword($cPost["cnconfirmation"], $passArr[1]) == $custPass ){	
+//echo 'Password Match'; echo $custPass; exit;
+
+$mail = Mage::getModel('core/email');
+$mail->setToName('This Your Name');
+$mail->setToEmail('arunava@sketchwebsolutions.com');
+$mail->setBody('Mail Text / Mail Content');
+$mail->setSubject('Mail Subject');
+$mail->setFromEmail('owner@magentostore.com');
+$mail->setFromName("Msg to Show on Subject");
+$mail->setType('html');// YOu can use Html or text as Mail format
+$mail->send();
+
+   }
+   else{
+$errors[] = $this->__('Password entered does not match account password.');
+   }
+   if (!empty($errors)) {
+       //$this->_getSession()->setCustomerFormData($this->getRequest()->getPost());
+       foreach ($errors as $message) {
+            $this->_getSession()->addError($message);
+       }
+       $this->_redirect('*/*/edit');
+       return $this;
+   } 
+ $this->_redirect('*/*/edit');	
+}
+Jun 21, 6:19 PM
+$session = $this->_getSession();
+$app = $this->_getApp();
+           	/** @var $store  Mage_Core_Model_Store*/
+           	$store = $app->getStore();
+           	$customer->sendNewAccountEmail( 'confirmation', $session->getBeforeAuthUrl(), $store->getId() );
+           	$customerHelper = $this->_getHelper('customer');
+           	$session->addSuccess($this->__('Account confirmation is required. Please, check your email for the confirmation link. To resend the confirmation email please <a href="%s">click here</a>.',
+               $customerHelper->getEmailConfirmationUrl($customer->getEmail())));
+
+----------------------------------------------------------------------------------------------------
+
+echo $customer -> getPrimaryAddresses();
+var_dump($customer -> getPrimaryAddresses());
+$addresses = Mage::getSingleton('customer/session')->getCustomer()->getPrimaryAddresses();
+
+echo $customer['dob'];
+                   $format = 'Y-m-d';
+                   $result = date($format, $this->timestamp($input));
+                   return $result;
+                   echo $result
+$result = Mage::getModel('core/date')->date($format, $customer['dob']);
+
+----------------------------------------------------------------------------------------------------------------
+
+<?php $_custquestions = $this->getQuestionsCollection()->addApprovedQuestionsFilter(); ?>
+<?php $_answers = $this->getQuestionsCollection()->addApprovedAnswersFilter(); ?>
+
+<?php foreach($_answers as $answer){ var_dump($answer->getData()); } ?>
+
+<?php foreach($_answers as $answer){ var_dump($answer->getData());  echo '<br/>'; } ?>
+
+--------------------------------------------------------------------------------------------------------------
+
+$vcollection = Mage::getModel('udropship/vendor')->getCollection(); $vcnt = 1;
+        foreach($vcollection as $avendor){  //var_dump($collitem->getData());
+         $cvendor = Mage::getModel('udropship/vendor')->load($avendor->getId());
+            $vproducts = $cvendor->getAssociatedProductIds(); //var_dump( $vproducts );
+                 
+                  $_vitem = Mage::getModel('catalog/product')->load($vproducts->getProductId());
+                                   $vurl = $_vitem->getProductUrl(); var_dump( $vurl );
+.........................................
+foreach($vproducts as $vp){
+                  $_vitem = Mage::getModel('catalog/product')->load($vp->getProductId());
+                                   $vurl = $_vitem->getProductUrl(); var_dump( $vurl );
+                 
+                 }
+                 
+$vimage = Mage::getHelper('udropship')->getResizedVendorLogoUrl($v, '200', '300');
+$vimg = $cvendor->getFileUrl('logo')
+<img src="<?php echo $ving;?>">
+
+---------------------------------------------------------------------------------------------------------------
+
+<?php echo Mage::app()->getLayout()->createBlock('customer/address_edit')->setTemplate('customer/address/edit.phtml')->toHtml(); ?>
+
+<?php echo Mage::app()->getLayout()
+->createBlock('udqa/customer_form')
+->setTemplate('udqa/customer/form.phtml')
+->toHtml();  ?>
+
+
+<?php $ovendor = Mage::getModel('udropship/vendor')->load($_custquestion->getId()); 
+           $ldcstmr = Mage::getModel('udropship/vendor')->load($_custquestion); var_dump($ldcstmr);
+           ?>
+$_custquestionData = $_custquestion->getData();
+<?php $ovendor = Mage::getModel('customer/customer')->load($_custquestionData[""]); 
+
+--------------------------------------------------------------------------------------------------------------
+
+<?php
+$_custquestionsContact = $this->getQuestionsCollection()->addApprovedQuestionsFilter(); $vendorarray = array();  
+foreach($_custquestionsContact as $key => $_custquestion1){
+  $vdata = $_custquestion1->getData(); if($vdata["vendor_id"] == NULL){ $_custquestionsContact->removeItemByKey($key); }}
+foreach($_custquestionsContact as $key => $_custquestion1){ $vdata = $_custquestion1->getData();
+  if(!in_array($vdata["vendor_id"],$vendorarray){ array_push($vendorarray,$vdata["vendor_id"]);  
+  } else { $_custquestionsContact->removeItemByKey($key); }
+}
+?>
+
+<?php
+$sHlp = Mage::helper('core/string');
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_questions = $this->getQuestionsCollection();
+foreach ($_questions as $_qstn):  
+      $qstnData = $_qstn->getData(); 
+              var_dump($qstnData);
+              
+?> 
+
+<?php    $vendorObj = Mage::getModel('udropship/vendor')->load($vId["vendor_id"]);
+  $vimg = $vendorObj->getFileUrl('logo'); echo $vimg; ?>
+<?php    $vendorObj = Mage::getModel('udropship/vendor')->load($this->getData('vid'));
+  $vimg = $vendorObj->getFileUrl('logo'); echo $vimg; ?>
+
+
+---------------------------------------------------------------------------------------------------
+
+jQuery('#contact .full-width-grid a.white-grad-btn').click(function(){ 
+ if(! jQuery('#contact .mailboxContainer .mail-alt-div .col-md-1 input').is(':checked')){
+  jQuery('#contact .mailboxContainer .mail-alt-div .col-md-1 input').each(function(index){ jQuery(this).prop('checked', true); });
+ }else{ 
+  jQuery('#contact .mailboxContainer .mail-alt-div .col-md-1 input').each(function(index){ jQuery(this).prop('checked', false); });
+ }
+});
+
+jQuery('#trash .full-width-grid a.red-grad-btn').click(function(){ 
+  jQuery('#trash .mailboxContainer form input[name="formid"]').val("trashformdelete"); 
+  jQuery('#trash .mailboxContainer form[name="trashformdel"]).submit();
+});
+
+$CurrencyCode = Mage::getStoreConfig('currency/options/allow');
+$currencyModel = Mage::getModel('directory/currency');
+$collection = $currencyModel->getCollection(); 
+
+<?php $currencyModel = Mage::getModel('directory/currency');
+                            $collection = $currencyModel->getCollection(); 
+                            foreach ($collection as $crncy)
+                                $crncyData = $crncy->getData();
+                            var_dump($crncyData);?>
+                            
+-----------------------------------------------------------------------------------------------------------                            
+
+$countryColl = Mage::helper('directory')->getCountryCollection();
+
+foreach ($countryColl as $country){ 
+   echo $country->getName();
+}
+$countryCode = Mage::getStoreConfig('general/country/default');
+
+$countriesArray = Mage::getModel('core/locale')->getOptionCountries();
+$currenciesArray = Mage::getModel('core/locale')->getOptionAllCurrencies();
+
+
+$currenciesArray = Mage::getModel('core/locale')->getOptionAllCurrencies();
+
+foreach($currenciesArray as $currency){
+
+  $currencycurrent = Mage::getModel('core/locale')->currency($currency);
+
+  var_dump($currencycurrent->getData());
+}
+ $currencycurrent = new Zend_Currency()->toCurrency(null,$currency);
+
+------------------------------------------------------------------------------------------------------------------
+
+<?php $currenciesArray = Mage::getModel('core/locale')->getOptionAllCurrencies();
+                               foreach($currenciesArray as $currency){
+                                  // var_dump($currency);
+                                  $currencycurrent = Mage::getModel('core/locale')->currency["value"];
+                                   var_dump($currencycurrent);
+                                 //var_dump($currencycurrent->getData());
+                               }?> 
+                               
+
+echo  $currencycurrent->getSymbol();
+echo Mage::app()->getLocale()->currency($currency["value"])->getSymbol(); 
+
+Mage::getModel('core/locale')->getOptionLocales();
+
+<?php $currenlanguage = Mage::getModel('core/locale')->getOptionLocales();
+var_dump($currenlanguage->getData());?>
+
+$customer = Mage::getModel("customer/customer");
+var_dump( $customer->getData() ); echo '<br/><br/>';
+
+$customer = Mage::getModel("customer/session"); 
+var_dump( $customer->getData() );
+
+$coredata = Mage::getModel('core/session');
+var_dump( $coredata ); 
+$customerId = Mage::getSingleton('customer/session')->getCustomerId(); echo $customerId;
+$customer = Mage::getModel("customer/customer")->load($customerId);
+$coresession = Mage::getSingleton('core/session');
+var_dump( $coredata ); 
+
+print_r( Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('customer_locale')->getData() );
+
+
+<?php $currenlocel = Mage::getModel('core/locale')->getOptionLocales();
+ foreach ($currenlocel as $locel){
+var_dump($locel);
+ }?>
+ 
 
 
 
