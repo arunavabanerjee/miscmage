@@ -1,0 +1,211 @@
+
+<?php
+if( ($_POST["formid"] == "preferenceform") ) {  
+$customerId = Mage::getSingleton('customer/session')->getCustomerId(); //echo $customerId; echo '<br/><br/>';
+$customer = Mage::getModel("customer/customer")->load($customerId); 
+$custData = $customer->getData(); $usermeta = $custData["usermetadesc"]; 
+//check if lannguage has been selected
+if($_POST["language"] != ""){ $storeLocale = $_POST["language"]; } else { $storeLocale = Mage::app()->getStore()->getLocaleCode(); } 
+if($_POST["currency"] != ""){ $currencyCode = $_POST["currency"]; } else { $currencyCode = Mage::app()->getStore()->getCurrentCurrencyCode(); } 
+if($usermeta == ""){ //set store config as customer config
+ $custconfig = array(); $custconfig["locale"] = $storeLocale; $custconfig["currency"] = $currencyCode;
+ $configjson = json_encode($custconfig); $customer->setData("usermetadesc",$configjson); 
+}else{
+ $configsys = json_decode($usermeta, true);  
+ if(array_key_exists('locale', $configsys)){ $configsys["locale"] = $storeLocale; }
+ if(array_key_exists('currency', $configsys)){ $configsys["currency"] = $currencyCode; }
+ if(! array_key_exists('locale', $configsys)){ $configsys["locale"] = $storeLocale; }
+ if(! array_key_exists('currency', $configsys)){ $configsys["currency"] = $currencyCode; }
+ $nconfigsys = json_encode($configsys); $customer->setData("usermetadesc",$nconfigsys); 
+}
+$customer->save(); echo '<p class="note=msg"> Your Preferences have been saved.</p>';
+//var_dump($customer->getData());
+}//if $_POST["formid"] 
+?>
+---------------------------------
+
+                    <!-- Preference Tab  -->
+                     <div role="tabpanel" class="tab-pane " id="preference">
+                     <?php    if(count($_POST) == 0){
+    $customerId = Mage::getSingleton('customer/session')->getCustomerId(); //echo $customerId; echo '<br/><br/>';
+    $customer = Mage::getModel("customer/customer")->load($customerId); 
+    $custData = $customer->getData(); $usermeta = $custData["usermetadesc"];
+    $configsys = json_decode($usermeta, true); 
+}?>
+                       <div class="col-md-12">
+                       <form id="preferenceform" name="preferenceform" action="" method="post" class="formclass">
+                         <input type="hidden" name="formid" id="formid" value="preferenceform" />
+                         <div class="portlet">
+				<div class="panel panel-default">
+                                 <div class="panel-heading"><h2>Language</h2></div>
+                                 <div class="panel-body">
+                                     <div class="col-md-4">
+                                         <div class="language_menu">
+                                             <h3>Choose your default language:</h3>
+                                             <div class="language_nav">
+                                                 <ul>
+                                                   <?php $currenlocel = Mage::getModel('core/locale')->getOptionLocales();
+                                                            foreach ($currenlocel as $locel) {?>
+                                                     <li data-id="<?php echo $locel["value"];?>"> <a class="language-anchor<?php if ($configsys['locale'] == $locel["value"]){?> active<?php }?>"><?php echo $locel["label"];?></a></li>
+                                                            <?php }?>
+                                                 </ul>
+                                             </div>
+                                             
+                                         </div>
+                                         
+                                     </div>
+                                     <div class="col-md-8">
+                                         <div class="language_menu1">
+                                             <?php $currenlocel = Mage::getModel('core/locale')->getOptionLocales();
+                                                            foreach ($currenlocel as $locel) {?>
+                                             <?php if ($configsys['locale'] == $locel["value"]){?>
+                                         <h3>View the site in <?php  echo $locel["label"];?></h3>
+                                             <?php } }?>
+                                         </div>
+                                     </div>
+                                     
+                                 </div>
+                                 </div>
+                         </div> <!-- end portlet -->
+                         
+-------------------------------------------------------------------------
+
+                        <div class="portlet1">
+			    <div class="panel panel-default">
+                                 <div class="panel-heading"><h2>Currency</h2></div>
+                                 <div class="panel-body">
+                            <?php $currenciesArray = Mage::getModel('core/locale')->getOptionAllCurrencies();
+			     $col = 1;	$cnt = 1;
+                             foreach ($currenciesArray as $currency){ //var_dump($currency);
+				$label = $currency["label"]; $value = $currency["value"];
+				$symbol = Mage::app()->getLocale()->currency($currency["value"])->getSymbol(); ?>
+				   <?php if($cnt == 1 && $col == 1) { ?>
+                                     <div class="col-md-4 pf_height">
+                                       <div class="language_menu">
+                                         <h3>Choose your default current:</h3>
+                                         <div class="language_nav1">
+                                         <ul>
+				    <?php } ?>
+				    <?php if($cnt == 1 && $col > 1 ) { ?>
+					<div class="col-md-4">
+                                         <div class="language_menu">
+                                           <div class="language_menu_noline">
+                                           <ul>
+				    <?php } ?>
+                                    <li data-id="<?php echo $value; ?>"><a class="currency-anchor<?php if ($configsys['currency'] == $value){?> active<?php }?>"><span class="link_space"> <?php echo $symbol; ?></span><?php echo $label; ?><span class="link_space1"> <?php echo $value; ?></span></a></li>
+
+				    <?php $cnt++; 
+					  if($cnt == 10){ $cnt = 1; $col++; ?>					
+                                             </ul>
+                                             </div>                                             
+                                         </div>
+                                     </div>
+			 	 <?php } // end if ?>
+			    <?php } // end foreach ?>
+
+			    </div>
+                           </div>	
+			 </div><!-- end portlet1 -->
+------------------------------------------------------------------------------------
+
+<?php
+if( ($_POST["emailformid"] == "emailform") ) {  
+
+//var_dump($_POST); 
+$customerId = Mage::getSingleton('customer/session')->getCustomerId(); //echo $customerId; echo '<br/><br/>';
+$customer = Mage::getModel("customer/customer")->load($customerId); 
+$custData = $customer->getData(); $usermeta = $custData["usermetadesc"]; 
+//check if lannguage has been selected
+if($usermeta == ""){ //set store config as customer config
+ $custconfig = array();
+ if(isset($_POST["emailsend"])){ foreach($_POST["emailsend"] as $value){ $custconfig[$value] = $value; } }   
+ if(isset($_POST["emailabout"])){ foreach($_POST["emailabout"] as $value){ $custconfig[$value] = $value; } } 
+ if(isset($_POST["emailshopping"])){ foreach($_POST["emailshopping"] as $value){ $custconfig[$value] = $value; } } 
+ if(isset($_POST["emailnewsletter"])){ foreach($_POST["emailnewsletter"] as $value){ $custconfig[$value] = $value; } } 
+ if(isset($_POST["emailinternational"])){ foreach($_POST["emailinternational"] as $value){ $custconfig[$value] = $value; } } 
+ $configjson = json_encode($custconfig); $customer->setData("usermetadesc",$configjson); 
+}else{
+ $configsys = json_decode($usermeta, true);  var_dump($configsys);
+ if(array_key_exists('email1', $configsys)){ $configsys["email1"] = $_POST["emailsend"][0]; }
+ if(array_key_exists('email2', $configsys)){ $configsys["email2"] = $_POST["emailsend"][1]; }
+ if(array_key_exists('email3', $configsys)){ $configsys["email3"] = $_POST["emailsend"][2]; }
+ if(array_key_exists('email4', $configsys)){ $configsys["email4"] = $_POST["emailsend"][3]; }
+ 
+ if(array_key_exists('about1', $configsys)){ $configsys["about1"] = $_POST["emailabout"][0]; }
+ if(array_key_exists('about2', $configsys)){ $configsys["about2"] = $_POST["emailabout"][1]; }
+ if(array_key_exists('about3', $configsys)){ $configsys["about3"] = $_POST["emailabout"][2]; }
+ if(array_key_exists('about4', $configsys)){ $configsys["about4"] = $_POST["emailabout"][3]; }
+ if(array_key_exists('about5', $configsys)){ $configsys["about5"] = $_POST["emailabout"][4]; }
+ if(array_key_exists('about6', $configsys)){ $configsys["about6"] = $_POST["emailabout"][5]; }
+ if(array_key_exists('about7', $configsys)){ $configsys["about7"] = $_POST["emailabout"][6]; }
+ if(array_key_exists('about8', $configsys)){ $configsys["about8"] = $_POST["emailabout"][7]; }
+ if(array_key_exists('about9', $configsys)){ $configsys["about9"] = $_POST["emailabout"][8]; }
+ 
+ if(array_key_exists('shopping1', $configsys)){ $configsys["shopping1"] = $_POST["emailshopping"][0]; }
+ if(array_key_exists('shopping2', $configsys)){ $configsys["shopping2"] = $_POST["emailshopping"][1]; }
+ if(array_key_exists('shopping3', $configsys)){ $configsys["shopping3"] = $_POST["emailshopping"][2]; }
+ if(array_key_exists('shopping4', $configsys)){ $configsys["shopping4"] = $_POST["emailshopping"][3]; }
+ if(array_key_exists('shopping5', $configsys)){ $configsys["shopping5"] = $_POST["emailshopping"][4]; }
+
+ if(array_key_exists('newsletter1', $configsys)){ $configsys["newsletter1"] = $_POST["emailnewsletter"][0]; }
+ if(array_key_exists('newsletter2', $configsys)){ $configsys["newsletter2"] = $_POST["emailnewsletter"][1]; }
+ if(array_key_exists('newsletter3', $configsys)){ $configsys["newsletter3"] = $_POST["emailnewsletter"][2]; }
+ 
+ if(array_key_exists('international1', $configsys)){ $configsys["international1"] = $_POST["emailinternational"][0]; }
+ if(array_key_exists('international2', $configsys)){ $configsys["international2"] = $_POST["emailinternational"][1]; }
+ if(array_key_exists('international3', $configsys)){ $configsys["international3"] = $_POST["emailinternational"][2]; }
+ if(array_key_exists('international4', $configsys)){ $configsys["international4"] = $_POST["emailinternational"][3]; }
+ if(array_key_exists('international5', $configsys)){ $configsys["international5"] = $_POST["emailinternational"][4]; }
+ if(array_key_exists('international6', $configsys)){ $configsys["international6"] = $_POST["emailinternational"][5]; }
+ if(array_key_exists('international7', $configsys)){ $configsys["international7"] = $_POST["emailinternational"][6]; }
+ if(array_key_exists('international8', $configsys)){ $configsys["international8"] = $_POST["emailinternational"][7]; }
+
+ if(! array_key_exists('email1', $configsys)){ $configsys["email1"] = $_POST["emailsend"][0]; }
+ if(! array_key_exists('email2', $configsys)){ $configsys["email2"] = $_POST["emailsend"][1]; }
+ if(! array_key_exists('email3', $configsys)){ $configsys["email3"] = $_POST["emailsend"][2]; }
+ if(! array_key_exists('email4', $configsys)){ $configsys["email4"] = $_POST["emailsend"][3]; }
+ 
+ if(! array_key_exists('about1', $configsys)){ $configsys["about1"] = $_POST["emailabout"][0]; }
+ if(! array_key_exists('about2', $configsys)){ $configsys["about2"] = $_POST["emailabout"][1]; }
+ if(! array_key_exists('about3', $configsys)){ $configsys["about3"] = $_POST["emailabout"][2]; }
+ if(! array_key_exists('about4', $configsys)){ $configsys["about4"] = $_POST["emailabout"][3]; }
+ if(! array_key_exists('about5', $configsys)){ $configsys["about5"] = $_POST["emailabout"][4]; }
+ if(! array_key_exists('about6', $configsys)){ $configsys["about6"] = $_POST["emailabout"][5]; }
+ if(! array_key_exists('about7', $configsys)){ $configsys["about7"] = $_POST["emailabout"][6]; }
+ if(! array_key_exists('about8', $configsys)){ $configsys["about8"] = $_POST["emailabout"][7]; }
+ if(! array_key_exists('about9', $configsys)){ $configsys["about9"] = $_POST["emailabout"][8]; }
+ 
+ if(! array_key_exists('shopping1', $configsys)){ $configsys["shopping1"] = $_POST["emailshopping"][0]; }
+ if(! array_key_exists('shopping2', $configsys)){ $configsys["shopping2"] = $_POST["emailshopping"][1]; }
+ if(! array_key_exists('shopping3', $configsys)){ $configsys["shopping3"] = $_POST["emailshopping"][2]; }
+ if(! array_key_exists('shopping4', $configsys)){ $configsys["shopping4"] = $_POST["emailshopping"][3]; }
+ if(! array_key_exists('shopping5', $configsys)){ $configsys["shopping5"] = $_POST["emailshopping"][4]; }
+
+ if(! array_key_exists('newsletter1', $configsys)){ $configsys["newsletter1"] = $_POST["emailnewsletter"][0]; }
+ if(! array_key_exists('newsletter2', $configsys)){ $configsys["newsletter2"] = $_POST["emailnewsletter"][1]; }
+ if(! array_key_exists('newsletter3', $configsys)){ $configsys["newsletter3"] = $_POST["emailnewsletter"][2]; }
+ 
+ if(! array_key_exists('international1', $configsys)){ $configsys["international1"] = $_POST["emailinternational"][0]; }
+ if(! array_key_exists('international2', $configsys)){ $configsys["international2"] = $_POST["emailinternational"][1]; }
+ if(! array_key_exists('international3', $configsys)){ $configsys["international3"] = $_POST["emailinternational"][2]; }
+ if(! array_key_exists('international4', $configsys)){ $configsys["international4"] = $_POST["emailinternational"][3]; }
+ if(! array_key_exists('international5', $configsys)){ $configsys["international5"] = $_POST["emailinternational"][4]; }
+ if(! array_key_exists('international6', $configsys)){ $configsys["international6"] = $_POST["emailinternational"][5]; }
+ if(! array_key_exists('international7', $configsys)){ $configsys["international7"] = $_POST["emailinternational"][6]; }
+ if(! array_key_exists('international8', $configsys)){ $configsys["international8"] = $_POST["emailinternational"][7]; }
+
+ $nconfigsys = json_encode($configsys); $customer->setData("usermetadesc",$nconfigsys); var_dump($nconfigsys); exit; 
+}
+
+$customer->save(); echo '<p class="note=msg"> Your notifications and subscriptions have been saved.</p>';
+}//if $_POST["formid"] 
+
+if(count($_POST) == 0){
+   $customerId = Mage::getSingleton('customer/session')->getCustomerId(); //echo $customerId; echo '<br/><br/>';
+   $customer = Mage::getModel("customer/customer")->load($customerId); 
+   $custData = $customer->getData(); $usermeta = $custData["usermetadesc"];
+   $configsys = json_decode($usermeta, true); 
+}
+
+?>
+
