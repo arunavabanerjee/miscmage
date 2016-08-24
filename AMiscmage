@@ -21,6 +21,7 @@ if($usermeta == ""){ //set store config as customer config
 $customer->save(); echo '<p class="note=msg"> Your Preferences have been saved.</p>';
 //var_dump($customer->getData());
 }//if $_POST["formid"] 
+header("Refresh:1");
 ?>
 ---------------------------------
 
