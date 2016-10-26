@@ -1,4 +1,52 @@
 
+<?php /*--- collection sort based on qty ---*/
+        if($_REQUEST['qty']==1){
+
+        $collection = Mage::getModel('catalog/product')->getCollection()
+			//->addAttributeToFilter('udropship_vendor', $v->getId())
+			->addAttributeToFilter('type_id', array('in'=>array('simple','downloadable','virtual'))); 
+	$collection->joinField('qty', 'cataloginventory/stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1','left') 
+		->joinTable( 'cataloginventory/stock_item', 'product_id=entity_id', array("stock_status" => "is_in_stock") )
+		->addAttributeToSort('qty', 'ASC');
+		//->addAttributeToSelect(array('sku', 'name', 'visibility'/*, 'cost'*/));	
+
+}
+        if($_REQUEST['qty']==2){
+
+        $collection = Mage::getModel('catalog/product')->getCollection()
+			//->addAttributeToFilter('udropship_vendor', $v->getId())
+			->addAttributeToFilter('type_id', array('in'=>array('simple','downloadable','virtual')));
+	$collection->joinField('qty', 'cataloginventory/stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1','left') 
+		->joinTable( 'cataloginventory/stock_item', 'product_id=entity_id', array("stock_status" => "is_in_stock") )
+		->addAttributeToSort('qty', 'DESC');
+		//->addAttributeToSelect(array('sku', 'name', 'visibility'/*, 'cost'*/));	
+
+}
+
+        if($_REQUEST['qty']==1){
+
+        $collection = Mage::getModel('catalog/product')->getCollection()
+			//->addAttributeToFilter('udropship_vendor', $v->getId())
+			->addAttributeToFilter('type_id', array('in'=>array('simple','downloadable','virtual'))); 
+	$collection->joinField('qty', 'cataloginventory/stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1','left') 
+		->addAttributeToSort('qty', 'ASC');
+		//->addAttributeToSelect(array('sku', 'name', 'visibility'/*, 'cost'*/));	
+
+}
+        if($_REQUEST['qty']==2){
+
+        $collection = Mage::getModel('catalog/product')->getCollection()
+			//->addAttributeToFilter('udropship_vendor', $v->getId())
+			->addAttributeToFilter('type_id', array('in'=>array('simple','downloadable','virtual')));
+	$collection->joinField('qty', 'cataloginventory/stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1','left') 
+		->addAttributeToSort('qty', 'DESC');
+		//->addAttributeToSelect(array('sku', 'name', 'visibility'/*, 'cost'*/));	
+
+}
+
+?>
+
+
 <?php
 /**
  * Magento
