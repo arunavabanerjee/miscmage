@@ -1,0 +1,1864 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getOrders(); ?>
+<?php $_poHlp = Mage::helper('udpo'); ?>
+<?php $vOrdColl = Mage::getModel('udpo/po')->getCollection(); ?> 
+<div class="page-title">
+    <h1><?php echo Mage::helper('udropship')->__('Orders') ?></h1>
+</div>
+
+<div class="history-tab-container clearfix">
+            
+<?php if(isset($_POST['submitbtn'])){ ?> 
+<div class="col-md-9 col-sm-9 no-left-padding no-right-padding">
+                
+           <!-- Tabs LI  -->
+           <ul class="nav nav-tabs history-tabs" role="tablist" id="historyTabs">
+            <li role="presentation" class="active"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">Search Results</a></li>
+           </ul>
+               
+           <!-- Tabs LI Ends -->
+           </div>  
+
+           <div class="col-md-3 col-sm-3 no-right-padding">
+            <form action="" method="post" id="search-orders">
+               <div class="form-group clearfix search-group">
+                 <input type="search" class="form-control" placeholder="Search your purchases" name="orderid" value="" />
+                 <button type="submit" class="btn search-btn" name="submitbtn">
+			<i class="fa fa-search" aria-hidden="true"></i>
+		</button>
+               </div>
+            </form>
+           </div>        
+
+<div class="tab-content history-tab-content">
+  
+
+</div>    
+<!-- Tab Panes Ends -->
+
+<?php } else { ?> 
+
+<div class="tab-set">
+           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding">
+                
+                <!-- Tabs LI  -->
+                <ul class="nav nav-tabs history-tabs" role="tablist" id="historyTabs">
+
+                <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">All Orders</a></li>
+                <li role="presentation"><a href="#pending" aria-controls="pending" role="tab" data-toggle="tab">Pending</a></li>
+                <li role="presentation"><a href="#processing" aria-controls="processing" role="tab" data-toggle="tab">Processing</a></li>
+                <!--<li role="presentation"><a href="#closed" aria-controls="closed" role="tab" data-toggle="tab">Complete</a></li>-->
+                <li role="presentation"><a href="#cancelled" aria-controls="cancelled" role="tab" data-toggle="tab">Cancelled</a></li>
+                <li role="presentation"><a href="#shipped" aria-controls="shipped" role="tab" data-toggle="tab">Shipped</a></li>
+                <li role="presentation"><a href="#delivered" aria-controls="delivered" role="tab" data-toggle="tab">Delivered</a></li>
+                <li role="presentation"><a href="#exchange" aria-controls="exchange" role="tab" data-toggle="tab">Return/Exchange</a></li>
+                
+                </ul>
+                
+                <!-- Tabs LI Ends -->
+            </div>  
+
+            <div class="col-md-3 col-sm-3 no-right-padding">
+                <form action="" method="post" id="search-orders">
+                    <div class="form-group clearfix search-group">
+                        <input type="search" class="form-control" placeholder="Search by order id" name="orderid" value="" />
+                        <button type="submit" class="btn search-btn" name="submitbtn">
+				<i class="fa fa-search" aria-hidden="true"></i>
+			</button>
+                    </div>
+                </form>
+            </div>        
+
+            
+<!-- Tab Panes Starts -->
+<div class="tab-content history-tab-content">
+                   
+<!--  All Order   -->
+<div role="tabpanel" class="tab-pane active" id="all">
+<?php 
+$allorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter( 'status', array( array('eq'=>'processing'), array('eq'=>'pending'), array('eq'=>'complete'), array('eq'=>'canceled'), array('eq'=>'closed') ) )
+			->setOrder('created_at', 'desc');
+foreach ($allorders as $aorder){ //var_dump( $porder->getData() ); echo '<br />'; //}
+   $_aorder = Mage::getModel('sales/order')->load($aorder['entity_id']); //var_dump($_aorder->getData()); echo '<br />';  exit; ?>
+   <?php  $_ordData = $_aorder->getData(); ?>
+                       <div class="portlet">
+<!--                       <div class="col-md-9 col-sm-9 no-left-padding"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+<!--                                        <div class="inline-block">Purchased from</div>-->
+<!--                                    <div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_aorder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                            <?php echo $store->getFrontendName();?></a>
+                                        </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_aorder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_ppr = Mage::getModel('catalog/product')->load($cdata['product_id']); //var_dump($_ppr->getData()); echo '<br />';
+   $purl = $_ppr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_ppr->getUdropshipVendor()); 
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name clearfix">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_ppr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_ppr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>
+                                                <div class="panel_review">
+                                                    <a href="<?php echo Mage::getBaseUrl().$_ppr['url_path'].'#tab-reviews';?>" target="_blank">
+                                                    You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processing</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                    
+                              <?php $orddetailsid = 0;
+			if ( $_aorder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_aorder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_porder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_aorder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $aorder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_aorder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                            <?php echo $store->getCurrentCurrencyCode();?>
+                                                             </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_aorder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td style="color: #00bff3;">Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_aorder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                               
+                               
+                                <!-- Temp Return / Exchange Modal Start -->
+        <?php if ($_aorder->getStatus() == 'complete'): ?>
+                                        <div id="myOrderModalallReturnExchange" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    <div class="modal-header clearfix">
+                                                        <h2>Return OR Exchange</h2>
+                                                    </div>
+                                                    <div class="modal-body clearfix">
+                                                        <!-- Temp Return / Exchange -->
+            <?php //if($_aorder->getStatus() == 'complete'):  ?>
+                                                        <form method="" action="<?php echo Mage::getBaseUrl(); ?>sales/order/saveRma/">
+                                                            <input name="order_id" value="<?php echo $_aorder->getId(); ?>" type="hidden">
+                                                            <div id="tougleReturn" class="col-xs-12">
+                                                                <div class="clearfix Order-No"><?php echo $this->__('Order No: ') . $_aorder->getIncrementId(); ?></div>
+            <?php $items = $_aorder->getAllItems(); ?>
+            <?php foreach ($items as $item): ?>
+                <?php $product = Mage::getModel('catalog/product')->load($cdata['product_id']); ?>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <img src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(100); ?>" height="100" width="" class="img-responsive  pull-left my-img">
+                                                                            <div class="popup-product-name"><?php echo $product->getName(); ?></div>
+                                                                            <div class="popup-price"><?php echo $item->getPrice(); ?></div>
+                                                                            <div class="popup-qty">Qty: <?php echo $item->getQtyOrdered(); ?></div>
+                                                                            <input class="qty input-text" name="rma[items][<?php echo $item['item_id'] ?>]" value="<?php echo $item->getQtyOrdered(); ?>" type="hidden">
+                                                                            <div class="popup-condition">Condition: 
+                                                                                <select class="my-select-condi" id="rma-items_condition-249" name="rma[items_condition][<?php echo $item['item_id'] ?>]">
+                                                                                    <option value="">* Please select</option>
+                                                                                    <option value="unopened">Unopened</option>
+                                                                                    <option value="opened">Opened</option>
+                                                                                    <option value="damaged">Damaged</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+            <?php endforeach; ?>
+                                                                <div class="popup-grand-total">Grand Total: <?php echo $_aorder->getGrandTotal(); ?></div>
+                                                                <div class="my-radio">
+                                                                    <span><input type="radio" name="rma[rma_reason]" value="refund"> Return</span>
+                                                                    <span><input type="radio" name="rma[rma_reason]" value="exchange"> Exchange</span>
+                                                                </div>
+                                                                <textarea placeholder="Fill in  your return reason or exchange" rows="4" cols="50" name="rma[comment_text]" class="my-txt-area"></textarea>
+                                                                <div class="popup-attach-image clearfix"> <a href="#" class="pull-right">Attach image</a> </div>
+                                                                <div class="popup-feedback"> 
+                                                                    <p>We are glad to be of service, if you need to return or ecvhange, we will review your product details. But mailing costs paid by yourself</p>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                            <div class="my-modal-footer-popup clearfix">
+                                                                <input type="submit" value="Confirm" class="pull-right modal-btn">
+                                                                <a href="javascript:void(0)" class="pull-right cls-btn" data-dismiss="modal">Cancel</a>
+                                                            </div>
+                                                        </form>
+            <?php //endif;  ?>
+                                                        <!-- Temp Return / Exchange -->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+        <?php endif; ?>
+                                    <!-- Temp Return / Exchange Modal End -->
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_aorder->getStatusLabel();?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls"> 
+                                         <a class="btn grey-grad-btn btn-<?php echo $_aorder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModalall" data-id="<?php echo $_aorder->getData('increment_id');?>">Contact The Shop</a>
+                                         <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_aorder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#all #myOrderModalall').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>   
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_aorder)) :?>
+                                         <a class="btn white-grad-btn View-Order-btn link-cancel" href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_aorder->getId())) ?>" style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                           <?php
+                            if($_aorder->hasShipments()) {
+                                $show = true;
+                                foreach($_aorder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+					<!--<span class="separator2">&nbsp;</span>-->
+                                          <div class="btn-controls">
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_aorder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   </div>
+                                        <?php 
+                                }
+                            }?>
+                                       </div>
+                                       <!-- Exchange / Return Button Starts -->
+                                        <?php if ($_aorder->getStatus() == 'complete'): ?>
+                                                <div class="btn-controls">
+                                                    <a  data-toggle="modal" data-target="#myOrderModalallReturnExchange" href="javascript:void(0);" class="btn white-grad-btn" style="color: #fff; background: #ff7777;">Exchange / Return</a>
+                                                </div>
+                                        <?php endif; ?>
+                                   </div>
+                                   
+                               </div>
+
+                            
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+<?php } ?>  <!-- Modal -->
+<div class="modal fade" id="myOrderModalall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal --> 
+</div>
+    
+
+<!-- Pending Order -->
+<div role="tabpanel" class="tab-pane active" id="pending">
+<?php 
+$pendingorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter( 'status', array( array('eq'=>'pending') ) )
+			->setOrder('created_at', 'desc');
+if(count($pendingorders) > 0){
+foreach ($pendingorders as $pdorder){ //var_dump( $porder->getData() ); echo '<br />'; //} 
+   $_pdorder = Mage::getModel('sales/order')->load($pdorder['entity_id']); //var_dump($_porder->getData()); echo '<br />'; ?>
+   <?php  $_ordData = $_pdorder->getData(); ?>
+                       <div class="portlet">
+<!--                       <div class="col-md-9 col-sm-9 no-left-padding"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+				    <!--<div class="inline-block">Purchased from</div>-->
+				    <!--<div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_pdorder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                            <?php echo $store->getFrontendName();?></a>
+                                        </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_pdorder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_ppr = Mage::getModel('catalog/product')->load($cdata['product_id']); //var_dump($_ppr->getData()); echo '<br />';
+   $purl = $_ppr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_ppr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_ppr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_ppr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>
+                                                <div class="panel_review">
+                                                    <a href="<?php echo Mage::getBaseUrl().$_ppr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processingg</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="<?php  echo $this->getSkinUrl('images/2-1.jpg') ?>" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+                                </div>
+                                    
+                              <?php $orddetailsid = 0;
+			if ( $_pdorder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_pdorder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_porder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_pdorder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $pdorder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_pdorder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                            <?php echo $store->getCurrentCurrencyCode();?>
+                                                             </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_pdorder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_pdorder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_pdorder['status'];?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls"> 
+                                         <a class="btn grey-grad-btn btn-<?php echo $_pdorder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModalpending" data-id="<?php echo $_pdorder->getData('increment_id');?>">Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_pdorder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#pending #myOrderModalpending').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>   
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_pdorder)) :?>
+                                         <a class="btn white-grad-btn View-Order-btn link-cancel" href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_pdorder->getId())) ?>" style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                           <?php
+                            if($_pdorder->hasShipments()) {
+                                $show = true;
+                                foreach($_pdorder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_pdorder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                            
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+<?php }?> <!-- Modal -->
+<div class="modal fade" id="myOrderModalpending" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal --> 
+<?php } //end if count ?>
+</div>
+                   
+
+
+<!-- Processing Order -->
+<div role="tabpanel" class="tab-pane active" id="processing">
+<?php 
+$processingorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter( 'status', array( array('eq'=>'processing') ) )
+			->setOrder('created_at', 'desc');
+if(count($processingorders) > 0){
+foreach ($processingorders as $porder){ //var_dump( $porder->getData() ); echo '<br />'; //} 
+   $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />'; ?>
+   <?php  $_ordData = $_porder->getData(); ?>
+                       <div class="portlet">
+<!--                       <div class="col-md-9 col-sm-9 no-left-padding"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+				    <!--<div class="inline-block">Purchased from</div>-->
+				    <!--<div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_porder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                            <?php echo $store->getFrontendName();?></a>
+                                        </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_porder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_ppr = Mage::getModel('catalog/product')->load($cdata['product_id']); //var_dump($_ppr->getData()); echo '<br />';
+   $purl = $_ppr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_ppr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_ppr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_ppr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>
+                                                <div class="panel_review">
+                                                    <a href="<?php echo Mage::getBaseUrl().$_ppr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processing</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="<?php  echo $this->getSkinUrl('images/2-1.jpg') ?>" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+
+                                </div>
+                                    
+                              <?php $orddetailsid = 0;
+			if ( $_porder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_porder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_porder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_porder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $porder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_porder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                            <?php echo $store->getCurrentCurrencyCode();?>
+                                                             </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_porder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_porder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_porder['status'];?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls"> 
+                                         <a class="btn grey-grad-btn btn-<?php echo $_porder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModalprocessing" data-id="<?php echo $_porder->getData('increment_id');?>">Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_porder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#processing #myOrderModalprocessing').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>   
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_porder)) :?>
+                                         <a class="btn white-grad-btn View-Order-btn link-cancel" href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_porder->getId())) ?>" style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                           <?php
+                            if($_porder->hasShipments()) {
+                                $show = true;
+                                foreach($_porder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_porder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                            
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+<?php }?> <!-- Modal -->
+<div class="modal fade" id="myOrderModalprocessing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal --> 
+<?php } //end if count ?>
+</div>
+                   
+                 
+<!-- Canceled Orders -->
+<div role="tabpanel" class="tab-pane" id="cancelled">
+<?php 
+$cancelledorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter('status', 'canceled')
+			->setOrder('created_at', 'desc');
+if(count($cancelledorders) > 0){
+foreach ($cancelledorders as $cnorder){ //var_dump( $porder->getData() ); echo '<br />'; }
+   $_cnorder = Mage::getModel('sales/order')->load($cnorder['entity_id']);  //var_dump($_porder->getData()); echo '<br />'; ?>
+   <?php  $_ordData = $_cnorder->getData(); ?>
+                       <div class="portlet">
+<!--                       <div class="col-md-9 col-sm-9 no-left-padding "><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+					<!-- <div class="inline-block">Purchased from</div>-->
+					<!-- <div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_cnorder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                           <?php echo $store->getFrontendName(); ?></a> </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_cnorder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_rpr = Mage::getModel('catalog/product')->load($cdata['product_id']);
+   $purl = $_rpr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_rpr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_rpr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_rpr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>  
+                                                <!--<div class="panel_review">
+                                                    <a href ="<?php echo Mage::getBaseUrl().$_rpr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>-->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <!--<span>Processing</span>-->
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <!--<span>Shipped</span>-->
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Cancelled</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="<?php  echo $this->getSkinUrl('images/5-1.jpg') ?>" class="img-responsive">
+                                            </div>
+                                            <div class="sku-section">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+                                </div>
+                                    
+                                    <?php $orddetailsid = 0;
+			if ( $_cnorder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_cnorder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_cnorder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_cnorder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $cnorder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_cnorder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_cnorder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_cnorder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header"><?php //var_dump($_cnorder->getStatusLabel());?>
+                                   <h2> <?php echo $_cnorder->getStatusLabel();?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls">
+                                           <a class="btn grey-grad-btn btn-<?php echo $_cnorder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModal3" data-id="<?php echo $_cnorder->getData('increment_id');?>">Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_cnorder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#cancelled #myOrderModal3').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_cnorder)) :?>
+                                        <a href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_cnorder->getId())) ?>" class="link-cancel btn white-grad-btn View-Order-btn " style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                            <?php
+                            if($_cnorder->hasShipments()) {
+                                $show = true;
+                                foreach($_cnorder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_cnorder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                        
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+		<?php }?> 
+<!-- Modal -->
+<div class="modal fade" id="myOrderModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal -->  
+<?php } // endif count ?> 
+</div>
+                    
+                     
+                    
+<!-- Shipped Order -->
+<div role="tabpanel" class="tab-pane active" id="shipped">
+<?php $shipped = 0; //echo count($vOrdColl);
+ $processingorders = Mage::getModel('sales/order')->getCollection()
+				->addFieldToSelect('*')
+				->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+				->addFieldToFilter( 'status', array( array('eq'=>'processing') ) )
+				->setOrder('created_at', 'desc');
+if(count($processingorders) > 0){
+ foreach($processingorders as $porder){  //var_dump( $porder->getData('entity_id') ); echo '<br />'; //} 
+   $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />';
+   $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id'); //echo $pOrderId; echo '<br/>'; 
+   foreach($vOrdColl as $_udpo){ 
+      if($_udpo->getData('order_id') == $pOrderId){ if($_poHlp->getUdpoStatusName($_udpo) == 'Shipped'){ $shipped = 1; break; } }}
+      if($shipped == 1){
+   ?>
+   <?php  $_ordData = $_porder->getData(); ?>
+   <div class="portlet">
+<!--     <div class="col-md-9 col-sm-9 no-left-padding"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+     <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+					<!-- <div class="inline-block">Purchased from</div>-->
+					<!-- <div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_porder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                            <?php echo $store->getFrontendName();?></a>
+                                        </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_porder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_ppr = Mage::getModel('catalog/product')->load($cdata['product_id']); //var_dump($_ppr->getData()); echo '<br />';
+   $purl = $_ppr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_ppr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_ppr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_ppr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>  
+                                                <div class="panel_review">
+                                                    <a href="<?php echo Mage::getBaseUrl().$_ppr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processing</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="<?php echo $this->getViewFileUrl('images/3.jpg'); ?>" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+                                </div>
+                                    
+                        <?php $orddetailsid = 0;
+			if ( $_porder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_porder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_porder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_porder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $porder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_porder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                            <?php echo $store->getCurrentCurrencyCode();?>
+                                                             </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_porder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_porder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_porder['status'];?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls">
+                                         <a class="btn grey-grad-btn btn-<?php echo $_porder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModalshipped" data-id="<?php echo $_porder->getData('increment_id');?>">Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_porder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#shipped #myOrderModalshipped').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_porder)) :?>
+                                         <a class="btn white-grad-btn View-Order-btn link-cancel" href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_porder->getId())) ?>" style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                           <?php
+                            if($_porder->hasShipments()) {
+                                $show = true;
+                                foreach($_porder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_porder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                            
+
+		</div>
+		</div>
+		</div>
+<?php } if($shipped >= 1){ $shipped = 0; } } ?>
+<!-- Modal -->
+<div class="modal fade" id="myOrderModalshipped" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal -->  
+<?php } // endif count orders ?> 
+</div>
+
+<!-- Delivered Order -->
+<div role="tabpanel" class="tab-pane active" id="delivered">
+<?php $delivered = 0; //echo count($vOrdColl);
+ $processingorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter('status', array( array('eq'=>'processing') ) )
+			->setOrder('created_at', 'desc');
+if(count($processingorders) > 0){
+  foreach ($processingorders as $porder){ //var_dump($porder->getData('entity_id')); echo '<br />'; //}
+    $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />'; 
+    $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id');
+    foreach($vOrdColl as $_udpo){ 
+      if($_udpo->getData('order_id') == $pOrderId){ if($_poHlp->getUdpoStatusName($_udpo) == 'Delivered'){ $delivered = 1; break; } }}
+      if($delivered == 1){ 
+  ?>
+ <?php  $_ordData = $_porder->getData(); ?>
+ <div class="portlet">
+<!-- <div class="col-md-9 col-sm-9 no-left-padding"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+					<!-- <div class="inline-block">Purchased from</div>-->
+					<!-- <div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_porder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                            <?php echo $store->getFrontendName();?></a>
+                                        </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_porder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_ppr = Mage::getModel('catalog/product')->load($cdata['product_id']); //var_dump($_ppr->getData()); echo '<br />';
+   $purl = $_ppr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_ppr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_ppr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_ppr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>  
+                                                <div class="panel_review">
+                                                    <a href="<?php echo Mage::getBaseUrl().$_ppr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processing</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="<?php echo $this->getViewFileUrl('images/4.jpg'); ?>" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+                                </div>
+                                    
+                              <?php $orddetailsid = 0;
+			if ( $_porder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_porder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_porder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_porder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $porder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_porder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                            <?php echo $store->getCurrentCurrencyCode();?>
+                                                             </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_porder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_porder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_porder['status'];?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls">
+                                         <a class="btn grey-grad-btn btn-<?php echo $_porder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModaldelivered" data-id="<?php echo $_porder->getData('increment_id');?>">Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_porder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#delivered #myOrderModaldelivered').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>
+
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_porder)) :?>
+                                         <a class="btn white-grad-btn View-Order-btn link-cancel" href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_porder->getId())) ?>" style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                           <?php
+                            if($_porder->hasShipments()) {
+                                $show = true;
+                                foreach($_porder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_porder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+
+
+
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+<?php } if($delivered == 1){ $delivered = 0; } }?> 
+<!-- Modal -->
+<div class="modal fade" id="myOrderModaldelivered" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal --> 
+<?php } // endif count ?>
+</div>
+                   
+                    
+<!-- Return or Exchange Order  -->
+<div role="tabpanel" class="tab-pane" id="exchange">
+<?php 
+ $exchangeorders = Mage::getModel('sales/order')->getCollection()
+			->addFieldToSelect('*')
+			->addFieldToFilter('customer_id', Mage::getSingleton('customer/session')->getCustomer()->getId())
+			->addFieldToFilter('status', 'closed' )
+			->setOrder('created_at', 'desc');
+if(count($exchangeorders) > 0){
+foreach ($exchangeorders as $eorder){ //var_dump( $eorder->getData() ); echo '<br />'; }
+   $_eorder = Mage::getModel('sales/order')->load($eorder['entity_id']);  //var_dump($_porder->getData()); echo '<br />'; ?>
+   <?php  $_ordData = $_eorder->getData(); ?>
+                       <div class="portlet">
+<!--                       <div class="col-md-9 col-sm-9 no-left-padding "><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1></div>-->
+                       
+                       <div class=" history-panels full-width-grid">
+                           
+                           <div class="col-md-9 col-sm-9 no-left-padding no-right-padding order-item-div">
+                                <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <div class="col-md-7 col-sm-6">
+					<!-- <div class="inline-block">Purchased from</div>-->
+					<!-- <div class="inline-block name-grid">
+                                        <span class="dollar-block"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                        <?php $store = Mage::getModel('core/store')->load($_eorder['store_id']);?>
+                                        <h2 class="inline-block"><a href="<?php echo $store->getBaseUrl();?>">
+                                           <?php echo $store->getFrontendName(); ?></a> </h2>
+                                    </div>-->
+                                        
+                                    <div class="inline-block time-grid"><h1 class="order-ids"><?php echo 'Order # ' .$_ordData['increment_id'];?></h1> <?php echo 'on '. Mage::helper('core')->formatDate($_ordData['created_at'], Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, false);?></div>
+                                    </div>
+                                    
+                                    
+                                    <div class="col-md-5 col-sm-6">
+                                        <div class="tc_pricing_amt pull-right" style="color: #fff;">
+                                            GRAND TOTAL :
+                                            <?php $_finalPrice = $_ordData['base_grand_total'];?>
+                                            <strong><?php echo $formattedPrice = Mage::helper('core')->currency($_finalPrice,true,false) ;?></strong> <?php //echo $store->getCurrentCurrencyCode();?>
+                                        </div>
+                                    </div>
+                                </div>
+                               <?php 
+                               $items = $_eorder->getAllItems(); 
+   foreach ($items as $item){ $cdata = $item->getData(); 
+   $_epr = Mage::getModel('catalog/product')->load($cdata['product_id']);
+   $purl = $_epr->getProductUrl(); $vobj = Mage::getModel('udropship/vendor')->load($_epr->getUdropshipVendor());
+                               ?>
+                                    
+                                    
+                                <div class="panel-body clearfix">
+                                    
+                                    <!------------------------------------->
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-sm-12">
+                                                <div class="row light-pink bot-mar-20">
+                                                    <div class="row light-pink">
+                                                        <div class="vendoe_name">
+                                                            <label class="vendor_child">Shop Name: <a href="<?php echo Mage::getBaseUrl().$vobj['url_key'];?>"><?php echo Mage::helper('umicrosite')->getLandingPageDescription($vobj);?></a></label> <span class="pull-right">Free Shipping</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                                <div class="panel-featured-img">
+                                                   <a href="<?php echo $purl; ?> " target="_blank"> <?php echo '<img src="'.$_epr->getImageUrl().'" class="img-responsive" alt="" />';?></a>
+                                                </div>
+                                                
+                                            <div class="clearfix">
+                                                <div class="product-tags">
+                                                    <h2><a href="<?php echo $purl; ?> " target="_blank"><?php echo $_epr['name'];?></a></h2> 
+                                                </div>
+
+                                                <div class="panel_attributes">
+                                                    <label><?php echo 'Quantity: '.number_format($cdata['qty_ordered'], 0);?></label>
+                                                </div>
+                                                <div class="panel_review">
+                                                    <a href ="<?php echo Mage::getBaseUrl().$_rpr['url_path'].'#tab-reviews';?>" target="_blank">
+                                            You can leave a review for this item from here.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="row light-pink bot-mar-20">
+                                                <div class="clearfix light-pink processing-step">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Pending</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Processing</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Shipped</span>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+                                                        <span>Completed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix processing-img">
+                                                <img src="" class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------------->
+                                    
+                                </div>
+                                    
+                                    <?php $orddetailsid = 0;
+			if ( $_eorder->getShippingAddress() != NULL ) { 
+                          $orddetailsid = $_eorder->getShippingAddress()->getId(); //echo $shippingId; echo '<br/>'; 
+                        } else {  //echo $billingId = $_cnorder->getBillingAddress()->getId(); 
+                          $orddetailsid = $_eorder->getBillingAddress()->getId(); //echo $billingId; echo '<br/>'; 
+                        } 
+                        $address = Mage::getModel('sales/order_address')->load($orddetailsid); 
+                       
+                       ?>
+                                    
+                                    <div class="panel-body Payment-method clearfix">
+                                        <div class="col-md-8">
+                                            <div class="full-width-grid">
+                                                <h3>Payment Method</h3>
+                                                <p><?php echo $payment_method = $eorder->getPayment()->getMethodInstance()->getTitle(); ?></p>
+                                            </div>
+                                            
+                                            <div class="full-width-grid">
+                                                <h3>Shipping Address</h3>
+                                                <p><?php echo $address['street'].','.$address['city'].' '.$address['postcode']; ?></p>
+                                                <p><?php echo $address['country_id']; ?></p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="table-responsive">
+                                                <table class="table card-table">
+                                                    <tr>
+                                                        <td>Item Total</td>
+                                                        <td><?php $_basePrice = $_eorder['subtotal'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_basePrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td><?php $_shippingPrice = $_eorder['shipping_amount'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_shippingPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                    
+                                                    <tr class="card-total">
+                                                        <td>Order Total</td>
+                                                        <td class="green-text" style="color: #00bff3;">
+                                                            <?php $_totalPrice = $_eorder['grand_total'];?>
+                                                            <?php echo $formattedPrice = Mage::helper('core')->currency($_totalPrice,true,false) ;?>
+                                                             <?php echo $store->getCurrentCurrencyCode();?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+   <?php }?>
+                              </div>
+                           </div>   <!-- col-md-9 -->
+                           
+                           <div class="col-md-3 col-sm-3 no-right-padding">
+                               <div class="panel-action-header">
+                                   <h2> <?php echo $_eorder['status'];?></h2>
+                                   <p><?php echo 'To '.$address['city'];?></p>
+                               </div>
+                               <div class="panel-actions">
+                                   
+                                   <div class="panel-actions-btn">
+                                       <div class="btn-controls">
+                                           <a class="btn grey-grad-btn btn-<?php echo $_eorder->getData('increment_id');?>"  data-toggle="modal" data-target="#myOrderModal5" data-id="<?php echo $_eorder->getData('increment_id');?>" >Contact The Shop</a>
+                                           <!--<a href="<?php //echo $store->getBaseUrl();?>contact/general-contacts.html" target="_blank" class="btn grey-grad-btn" >Contact The Shop-->
+			<script>
+			jQuery('.panel-actions .panel-actions-btn .btn-<?php echo $_eorder->getData('increment_id');?>').click(function(){ 
+				//console.log(this); //var ordId = jQuery(this).data('id').toString();
+				var ordId = jQuery(this).data('id');
+				jQuery.ajax({
+  					method: "POST",
+  				        url: "<?php echo $this->getUrl('sales/order/contactshop'); ?>id/"+ordId,
+				        cache: false,
+				       	dataType: "html",
+					success: function(result,success) { 
+					    console.log('success'); //console.log(result); 
+					    jQuery('#exchange #myOrderModal5').append(result); 
+					}
+				}).done(function( msg ) { 
+    					//jQuery('#myOrderModalall').modal({ show: true });
+  				});
+			});
+			</script>
+
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <a href="javascript:void(0);" class="btn white-grad-btn View-Order-btn" style="color: #fff; background: #ff7777;">View Order Details</a>
+                                       </div>
+                                       
+                                       <div class="btn-controls">
+                                           <?php if ($this->helper('cancelorder/customer')->canCancel($_eorder)) :?>
+                                        <a href="<?php echo $this->getUrl('sales/order/cancel',array('order_id' => $_eorder->getId())) ?>" class="link-cancel btn white-grad-btn View-Order-btn " style="background: #0092b7; color: #fff !important;"><?php echo $this->__('Cancel') ?></a>
+                                             <?php endif?>
+                            <?php
+                            if($_eorder->hasShipments()) {
+                                $show = true;
+                                foreach($_eorder->getTracksCollection() as $k=>$v) {                            
+                                    if($v['carrier_code'] == 'custom' || $v['carrier_code'] == '')
+                                        $show = false;
+                                }
+                                if($show) {?>
+<!--                                    <span class="separator2">&nbsp;</span>-->
+
+                                    <a class="btn white-grad-btn View-Order-btn askTrackBtn" style="background: #0092b7; color: #fff !important;" href="javascript:;" onclick="popWin('<?php echo Mage::helper('shipping/data')->getTrackingPopUpUrlByOrderId($_eorder->getId()) ?>', 'tracking the order', 'scrollbars=yes,width=800,height=600,resizable=yes');return false;"><span><?php echo $this->__('Track Order') ?></span></a>
+                                   <?php 
+                                }
+                            }?>
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                               
+                           </div>
+                          
+                       </div>
+                       </div>
+                       
+                   
+		<?php }?> 
+<!-- Modal -->
+<div class="modal fade" id="myOrderModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!-- end modal --> 
+<?php } //endif count ?>
+</div>
+                   
+</div> 
+<!-- Tab Panes Ends -->            
+            
+</div>      
+<?php } // end of if- else ?>
+
+
+<?php if($_orders->getSize()): ?>
+
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+<?php //echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo Mage::helper('udropship')->__('You have placed no orders.'); ?></p>
+<?php endif ?>
