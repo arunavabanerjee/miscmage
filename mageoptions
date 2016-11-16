@@ -8,6 +8,15 @@
 <?php $vpager = Mage::app()->getLayout()->createBlock('page/html_pager', 'custom.pager');
      $vpager->setAvailableLimit(array(10 => 10, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
      $vpager->setCollection($tvcollection); ?>
+     
+ <?php $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id(); 
+   $tvcollection = Mage::getModel('catalog/product')->getCollection()
+			->addFieldToFilter('udropship_vendor', $vendor_id)
+			->setOrder('created_at', 'desc')->setPageSize(12)->setCurPage(1); ?>
+
+<?php $vpager = Mage::app()->getLayout()->createBlock('page/html_pager', 'custom.pager');
+     $vpager->setAvailableLimit(array(12 => 12, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
+     $vpager->setCollection($tvcollection); ?>    
 
 <ul class="shop_product_box_row ravi4">
  <?php $item_qty=0; 
