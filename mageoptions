@@ -1,4 +1,122 @@
-				
+
+------ collection paging
+ <ul class="shop_product_box_row ravi4">
+ <?php $item_qty=0; $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id(); 
+   $tvcollection = Mage::getModel('catalog/product')->getCollection()
+			->addFieldToFilter('udropship_vendor', $vendor_id)
+			->setOrder('created_at', 'desc')->setPageSize(12)->setCurPage(1);
+   if(count($tvcollection) > 0){
+   foreach ($tvcollection as $_p): $_id = $_p->getEntityId() ; 
+     $_product1=Mage::getModel('catalog/product')->load($_id); $_product=$_product1; // will bring back the first 20 products
+     //echo $_product->getattribute_set_id(); /// echo $_product->getColor(); // echo '<br>'; ?>
+     <!--<li class="shop_product_item col-md-3 col-sm-3 col-xs-6">
+        <input type="hidden" value="<?=$_id;?>"/>
+        <a class="product_section_box_item " href="<?php echo $_product->getProductUrl();?>" title="<?php echo $_product->getName() ?>">
+          <img class="product_section_box_item_img" src="<?php echo $_product->getThumbnailUrl();  ?>"  alt="<?php echo 'Product-image' ?>" />    
+          <div class="product_section_box_item_detail">
+             <h4 class="product_name"> <?php echo $_product->getName() ?></h4>
+             <div class="product_price"><span><?php  echo Mage::helper('core')->currency($_product->getPrice(), true, false)?> <span style="font-size: 10px;"><?= $currencycode = Mage::app()->getStore()->getCurrentCurrencyCode();?></span></span></div>
+          </div>
+        </a>              
+      </li>-->
+    <li class="item_box_li product_item_box col-md-3 col-sm-6 col-xs-12 mkg-hover">
+     <div class="item_box_layout bing-product">
+       <div class="product-img-cat">
+         <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName() ?>" class="all-link">
+           <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(300);  ?>"  alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="box_item_img img-responsive" /><span></span>
+         </a>
+       </div>
+
+       <!-- Amlist Html code start -->
+       <div class="add-to-wish-list text-center">
+         <?php /********************* List Update **********************************/     
+         if(Mage::getSingleton('customer/session')->isLoggedIn()) { ?>
+         <!--<div class="add-loader"><div class="loader"></div></div>-->
+          <a class="link-wishlist">
+           <?php if (in_array($_product->getId(), $listProductId)) { ?>
+           	<!--<i style="display:block;" class="fa fa-heart icon-two" aria-hidden="true"></i>-->
+                <?php if($CountlistProductId[$_product->getId()] > 1) { ?>
+                   <i style="display:block;" data-id="<?php echo $_product->getId(); ?>" id="bars-trick<?php echo $_product->getId(); ?>" class="bars-trick"><img src="<?php echo $this->getSkinUrl('images/heart-tick.png'); ?>"></i>  
+                <?php } else { ?>
+                   <i style="display:block;" data-id="<?php echo $_product->getId(); ?>" class="fa fa-bars icon-three three-bars" id="bars<?php echo $_product->getId(); ?>" aria-hidden="true"></i>
+                <?php } ?>
+                <div style="display:none;" id="loader<?php echo $_product->getId(); ?>" class="loader"></div>
+           <?php } else { ?>
+                <i id="grey-heart<?php echo $_product->getId(); ?>" class="fa fa-heart icon-one" aria-hidden="true" data-id="<?php echo $_product->getId(); ?>" ></i> 
+           <?php } ?>
+                                          
+           <i id="red-heart<?php echo $_product->getId(); ?>" class="fa fa-heart icon-two" aria-hidden="true"></i> 
+           <i data-id="<?php echo $_product->getId(); ?>" class="fa fa-bars icon-three three-bars" id="bars<?php echo $_product->getId(); ?>" aria-hidden="true"></i>
+           <i data-id="<?php echo $_product->getId(); ?>" id="bars-trick<?php echo $_product->getId(); ?>" class="bars-trick"><img src="<?php echo $this->getSkinUrl('images/heart-tick.png'); ?>"></i>
+           <div style="display:none;" id="loader<?php echo $_product->getId(); ?>" class="loader"></div>
+           <?php /* ?> <i data-id="<?php echo $p->getId(); ?>" class="fa fa-heart grey-heart-first"  aria-hidden="true"></i>  <?php */ ?>          
+          </a>
+
+          <?php /* ?>  <a href="<?php echo $this->getUrl('amlist/list/addItem' , array('product' => $p->getId()) ) ?>" class="link-wishlist">
+             <i class="fa fa-heart icon-one" aria-hidden="true"></i> </a> <?php */ ?>
+
+         <?php } else {  ?>  
+            <a href="Javascript:void(0)" class="ajaxlogin-login link-wishlist">
+               <i class="fa fa-heart icon-one" aria-hidden="true"></i> </a>
+         <?php /********************* List Update **********************************/     
+             } ?>                                                     
+       </div>
+
+       <div class="add-to-wish-form" id="add-to-wish-form<?php echo $_product->getId(); ?>">
+          <div class="urlists"><h3>YOUR LISTS</h3></div>
+          <div class="form-add" id="form-add<?php echo $_product->getId(); ?>">
+            <form>
+               <div class="checkbox">
+                 <label><input type="checkbox"> Clip name classification </label>
+                 <br>  
+               </div>
+               <div class="form-group">
+                 <input type="email" class="form-control" id="newlist" placeholder="New list">
+                 <button class="btn btn-danger">Add</button>
+               </div>
+            </form>
+          </div>
+       </div>
+                            
+       <!-- Amlist Html code end -->
+       <div class="product_section_box_item_detail">
+         <div class="mh-hover clearfix">
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName() ?>" class="all-link"></a>
+            <h4 class="product_name">
+            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_product->getName() ?>">
+               <?php echo $_product->getName() ?><?php //echo substr($_product->getName(),0,20).'...'; ?>
+            </a>
+            </h4>
+            <div class="product_business_name text-center">
+              <a href="<?php echo $this->getUrl()?><?php echo $vendor_shop_url ?>" title="Shop store">
+                <?php echo $vendor_shop_name; ?>
+              </a>
+            </div>
+            <div class="product_price text-center">
+              <?php echo Mage::helper('core')->formatPrice($_product->getPrice()); ?>
+              <?php //echo $this->getPriceHtml($_product, true) ?>
+            </div> 
+            <!--<div class="add-to-wish-list text-center">
+               <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                 <a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist">
+                    Add to Wishlist
+                 </a>
+               <?php endif; ?>
+            </div>-->
+          </div>
+        </div>  
+      </div>       
+    </li> 
+  <?php endforeach ?>
+  <?php } ?>  
+ </ul>  
+ <div class="clearfix"></div>
+ <?php $vpager = Mage::app()->getLayout()->createBlock('page/html_pager', 'custom.pager');
+     $vpager->setAvailableLimit(array(10 => 10, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
+     $vpager->setCollection($tvcollection); echo $vpager->toHtml(); ?>
+ <?php  } ?>
+ <script type="text/javascript">//document.getElementById('quty_total_product').innerHTML="<?=$item_qty?>" ;</script>
+
 ----- $_product will need to be defined and in scope. 
 				
 <?php if($_product->getOptions()){ ?>
