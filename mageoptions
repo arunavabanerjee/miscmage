@@ -1,4 +1,57 @@
 
+----- new arrivals ---- 
+        $todayStartOfDayDate  = Mage::app()->getLocale()->date()
+            ->setTime('00:00:00')
+            ->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
+
+        $todayEndOfDayDate  = Mage::app()->getLocale()->date()
+            ->setTime('23:59:59')
+            ->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
+
+        /** @var $collection Mage_Catalog_Model_Resource_Product_Collection */
+        $collection = Mage::getResourceModel('catalog/product_collection');
+        $collection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds());
+
+
+        $collection = $this->_addProductAttributesAndPrices($collection)
+            ->addStoreFilter()
+            ->addAttributeToFilter('news_from_date', array('or'=> array(
+                0 => array('date' => true, 'to' => $todayEndOfDayDate),
+                1 => array('is' => new Zend_Db_Expr('null')))
+            ), 'left')
+            ->addAttributeToFilter('news_to_date', array('or'=> array(
+                0 => array('date' => true, 'from' => $todayStartOfDayDate),
+                1 => array('is' => new Zend_Db_Expr('null')))
+            ), 'left')
+            ->addAttributeToFilter(
+                array(
+                    array('attribute' => 'news_from_date', 'is'=>new Zend_Db_Expr('not null')),
+                    array('attribute' => 'news_to_date', 'is'=>new Zend_Db_Expr('not null'))
+                    )
+              )
+            ->addAttributeToSort('news_from_date', 'desc')
+            ->setPageSize($this->getProductsCount())
+            ->setCurPage(1);
+
+------ top products ---- 
+<?php
+ $storeId = Mage::app()->getStore()->getId(); $__categoryList = array();
+ $cID1 = 11; $cID2 = 12;
+ $TMTBarsProdColl = Mage::getModel('catalog/category')->load($cID1)->getProductCollection()->getAllIds();
+ $CementProdColl = Mage::getModel('catalog/category')->load($cID2)->getProductCollection()->getAllIds();
+ $_products = Mage::getResourceModel('reports/product_collection')
+            		->addOrderedQty()
+            		->addAttributeToSelect('*')
+            		->addAttributeToSelect(array('name', 'price', 'small_image'))
+            		->setStoreId($storeId)
+            		->addStoreFilter($storeId)
+            		->setOrder('ordered_qty', 'desc'); // most best sellers on top
+ Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($_products);
+ Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($_products);
+ //$_products->setPageSize(5)->setCurPage(1); //$this->setProductCollection($products); 
+?>
+
+
 ------ collection paging -----
 <?php $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id(); 
    $tvcollection = Mage::getModel('catalog/product')->getCollection()
