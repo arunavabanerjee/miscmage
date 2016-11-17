@@ -32,6 +32,43 @@
             ->addAttributeToSort('news_from_date', 'desc')
             ->setPageSize($this->getProductsCount())
             ->setCurPage(1);
+	    
+<?php 
+   $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id();
+   $storeId = Mage::app()->getStore()->getId(); 
+   $todayStartOfDayDate  = Mage::app()->getLocale()->date()
+            ->setTime('00:00:00')
+            ->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
+   $todayEndOfDayDate  = Mage::app()->getLocale()->date()
+            ->setTime('23:59:59')
+            ->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
+   $storeId = Mage::app()->getStore()->getId(); 
+   $tvcollection = Mage::getResourceModel('catalog/product_collection')
+            ->addAttributeToSelect('*')
+			->addStoreFilter($storeId)
+			->addFieldToFilter('udropship_vendor', $vendor_id)
+			->addAttributeToFilter('news_from_date', array('or'=> array(
+                0 => array('date' => true, 'to' => $todayEndOfDayDate),
+                1 => array('is' => new Zend_Db_Expr('null')))
+            ), 'left')
+            ->addAttributeToFilter('news_to_date', array('or'=> array(
+                0 => array('date' => true, 'from' => $todayStartOfDayDate),
+                1 => array('is' => new Zend_Db_Expr('null')))
+            ), 'left')
+            ->addAttributeToFilter(
+                array(
+                    array('attribute' => 'news_from_date', 'is'=>new Zend_Db_Expr('not null')),
+                    array('attribute' => 'news_to_date', 'is'=>new Zend_Db_Expr('not null'))
+                    )
+              )
+            ->addAttributeToSort('news_from_date', 'desc')
+            ->setPageSize(12)->setCurPage(1); 
+   //$tvcollection->setVisibility(Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds()); ?>
+
+<?php $vpager = Mage::app()->getLayout()->createBlock('page/html_pager', 'custom.pager');
+     $vpager->setAvailableLimit(array(12 => 12, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
+     $vpager->setCollection($tvcollection); ?>	    
+
 
 ------ top products ---- 
 <?php
@@ -50,6 +87,22 @@
  Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($_products);
  //$_products->setPageSize(5)->setCurPage(1); //$this->setProductCollection($products); 
 ?>
+
+<?php 
+ $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id(); 
+ $storeId = Mage::app()->getStore()->getId(); 
+ $tvcollection = Mage::getResourceModel('reports/product_collection')
+            		->addOrderedQty()
+            		->addAttributeToSelect('*')
+            		->addStoreFilter($storeId)
+					->addFieldToFilter('udropship_vendor', $vendor_id)
+            		->setOrder('ordered_qty', 'desc')
+					->setPageSize(12)->setCurPage(1); // most best sellers on top ?>
+
+<?php $vpager = Mage::app()->getLayout()->createBlock('page/html_pager', 'custom.pager');
+     $vpager->setAvailableLimit(array(12 => 12, 15 => 15, 20 => 20, 30 => 30, 40 => 40, 50 => 50 ));
+     $vpager->setCollection($tvcollection); ?>
+
 
 
 ------ collection paging -----
