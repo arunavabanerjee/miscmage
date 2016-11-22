@@ -1,4 +1,16 @@
 
+<reference name="head">
+    <!-- For a JS in the js folder -->
+    <action method="removeItem"><type>js</type><name>functions.js</name></action>
+    <!-- For a JS in the skin folder -->
+    <action method="removeItem"><type>skin_js</type><name>functions.js</name></action>
+    <!-- For CSS in the skin folder -->
+    <action method="removeItem"><type>skin_css</type><name>css/local.css</name></action>
+    <!-- For CSS in the js folder -->
+    <action method="removeItem"><type>js_css</type><name>local.css</name></action>
+</reference>
+
+
 <div class="modal fade" id="frontModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
