@@ -1,4 +1,20 @@
 
+<?php
+  if(empty($errors)){
+    $uname = $request->getPost('username'); $erroruname = array(); 
+    $customerColl = Mage::getModel('customer/customer')->getCollection()->addFieldToFilter('username', $uname);
+    if(count($customerColl) > 0){
+      $erroruname[0] = "Username Already In Use";
+      $erroruname[1] = "Use another username";
+      $errors = array_merge($erroruname, $errors);
+    }else {   
+      $customer->setUsername($uname);
+    }
+ } ?>
+ 
+
+
+
 <reference name="head">
     <!-- For a JS in the js folder -->
     <action method="removeItem"><type>js</type><name>functions.js</name></action>
@@ -9,7 +25,6 @@
     <!-- For CSS in the js folder -->
     <action method="removeItem"><type>js_css</type><name>local.css</name></action>
 </reference>
-
 
 <div class="modal fade" id="frontModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
