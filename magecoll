@@ -8,7 +8,10 @@
                                         //->setOrder('position', 'asc')
                                         ->setLoadProductCount('true')
                                         ->load();
-    echo count($rCollection);
+   echo count($rCollection);
+   foreach($rCollection as $category){ 
+      echo $category->getId() .'  '. $category->getName() .'  '.$category->getLevel(); echo '<br>'; 
+   }
 ?>
 
 
