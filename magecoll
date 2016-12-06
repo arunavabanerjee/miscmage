@@ -1,4 +1,17 @@
 
+<?php /*category tree */
+    $rCollection = Mage::getResourceModel('catalog/category_collection')
+                                        //->setStoreId(Mage::app()->getStore()->getId())
+                                        ->addIsActiveFilter()
+                                        //->addFieldToFilter('level', array('eq' => 2))
+                                        ->addAttributeToSelect('*')
+                                        //->setOrder('position', 'asc')
+                                        ->setLoadProductCount('true')
+                                        ->load();
+    echo count($rCollection);
+?>
+
+
 <?php /*--- collection sort based on qty ---*/
         if($_REQUEST['qty']==1){
 
