@@ -1,4 +1,111 @@
 
+<?php
+    $enabledFeaturedCategories  = Mage::helper('featuredcategory')->isEnabledFeaturedCategories();
+    $imageCategoriesWidth       = Mage::helper('featuredcategory')->getImageCategoriesWidth();
+    $imageCategoriesHeight      = Mage::helper('featuredcategory')->getImageCategoriesHeight();
+    $showCategoriesAlphabet     = Mage::helper('featuredcategory')->isShowCategoriesAlphabet();
+    $numberCategoriesPerRow     = Mage::helper('featuredcategory')->getNumberCategoriesPerRow();
+    $numberCharactorsPerCategory = Mage::helper('featuredcategory')->getNumberCharsPerCategory();
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $categories = Mage::getModel('catalog/category')->getCollection()
+        ->addAttributeToSelect('*')
+        ->addAttributeToSelect('url_key')
+	->addFieldToFilter('is_active', 1)
+	->addAttributeToFilter('level', array('eq' => 2));
+        //->addAttributeToSelect('featured_category', 1)
+    echo 'Top Categories: '; echo count($categories); echo '<br>'; 
+    foreach($categories as $category){ echo $category->getId(). '  ' . $category->getName(); }
+
+    if($showCategoriesAlphabet){
+        $categories = Mage::getModel('catalog/category')->getCollection()
+            ->addAttributeToSelect('*')
+            ->addAttributeToSelect('url_key')
+            ->addAttributeToSelect('featured_category', 1)
+            ->addAttributeToSort('name', 'ASC');
+    }
+
+    $count = count($categories);
+
+?>
+<?php if($enabledFeaturedCategories): ?>
+	<!--<div class="page-title">
+		<h2>Featured Categories</h2>
+	</div>-->
+    <div class="featured-category-list">
+        <?php if ($count > 0):?>
+        <?php $i = 0; foreach($categories as $category): ?>
+        <?php
+              $categoryID = $category->getId(); echo $categoryID;
+              $imageUrl =  Mage::getModel('catalog/category')->load($categoryID)->getImageUrl();// base path
+              $category = Mage::getModel('catalog/category')->load($categoryID);
+              $categoryImage = $category->getImage(); // image name
+              $basePath = Mage::getBaseDir(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/catalog/category/'.$category->getImage();
+              $newImageCategoriesResized = Mage::helper('featuredcategory')->resizeImgCategories($categoryImage, $basePath, $imageCategoriesWidth, $imageCategoriesHeight );
+                    
+              $parentcatname = $category->getName();
+    	      $parentcaturl =  $category->getUrl();
+    	      //$videourl =  $category->getParentCategory()->getData('video_url');
+    	      $videourl =  $category->video_url;
+    	      $videoname =  $category->getData('video_name');
+    	      $videodes =  $category->getData('video_description');
+    	      //$categories[$category->getName()] = array('url' => $category->getUrl(), 'img' => $category->getImageUrl()); ?>
+    
+	<?php 
+	if($category->featured_category):
+	   $thirdcategories = Mage::getModel('catalog/category')->getCollection()
+        			->addAttributeToSelect('*')
+        			->addAttributeToSelect('url_key')
+				->addFieldToFilter('is_active', 1)
+				->addAttributeToFilter('parent_id',$categoryID);
+				//->addAttributeToFilter('level', array('eq' => 3));
+
+	   $tcategories = $thirdcategories->getAllIds();
+
+	   $fourthcategories = Mage::getModel('catalog/category')->getCollection()
+        			->addAttributeToSelect('*')
+        			->addAttributeToSelect('url_key')
+				->addFieldToFilter('is_active', 1)
+				->addAttributeToFilter('level', array('eq' => 4))
+				->addAttributeToFilter('parent_id',array('in' => $tcategories));
+        			//->addAttributeToSelect('featured_category', 1); ?>
+                        
+                            
+        <section class="home_category_section"> 
+        <div class="row">
+         <div class="col-xs-12">  
+             <div class="full_heading_category">
+                 <a href="<?php echo $parentcaturl; ?>"><?php echo $parentcatname; ?></a>
+             </div>
+         </div>
+	 
+	 <?php foreach($thirdcategories as $tcategory){ if($tcategory->featured_category){?>           
+	 <li>
+         
+	 </li>
+   	<?php if($i++ == 4){break; } } } //endforeach ?>
+
+	<?php if ($i != 4){ ?>
+	<?php foreach($fourthcategories as $fcategory){ if($fcategory->featured_category){ ?>
+
+
+	<?php if($i++ == 4){break; } } } //endforeach ?>
+
+    	</div><!--end row-->
+	</section>
+
+	<?php endif; ?> 
+        <?php endforeach ?>
+
+	<script type="text/javascript">decorateGeneric($$('ul.row-item'), ['odd','even','first','last'])</script>
+        <?php endif ?>
+    </div>
+<?php endif ?>
+
+---------------------------------------------------
+
+
 <?php /*category tree */
     $rCollection = Mage::getResourceModel('catalog/category_collection')
                                         //->setStoreId(Mage::app()->getStore()->getId())
