@@ -1,0 +1,26 @@
+ 
+ // get pos based on an order from vendor collection
+ $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />'; ?>
+   <?php $poItems = array(); $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id'); ?>
+   <?php foreach($vOrdColl as $_udpo){ if($_udpo->getData('order_id') == $pOrderId){
+          //if($_poHlp->getUdpoStatusName($_udpo) == 'Delivered'){ $delivered = 1; break; }
+          array_push($poItems, $_udpo->getData()); 
+          $poItem = Mage::getModel('udpo/po_item')->setPo($_udpo); var_dump($poItem); }} ?>
+
+//po collection 
+<?php $PoS = array(); $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id'); ?>
+<?php foreach($vOrdColl as $_udpo){ if($_udpo->getData('order_id') == $pOrderId){
+       //if($_poHlp->getUdpoStatusName($_udpo) == 'Delivered'){ $delivered = 1; break; }
+       array_push($PoS, $_udpo); }} ?>
+
+//po collection
+<?php $acnt=0; $PoS = array(); $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id'); ?>
+<?php foreach($vOrdColl as $_udpo){ if($_udpo->getData('order_id') == $pOrderId){
+       //if($_poHlp->getUdpoStatusName($_udpo) == 'Delivered'){ $delivered = 1; break; }
+       array_push($PoS, $_udpo); }} ?>
+
+//
+
+    
+    
+    
