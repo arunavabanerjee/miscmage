@@ -1,4 +1,10 @@
  
+ // get review block 
+ <?php echo Mage::app()->getLayout()->createBlock('review/form')
+                       ->setData('pid', $cdata['product_id'])
+                       ->setTemplate('review/form.phtml')->toHtml(); ?>
+
+ 
  // get pos based on an order from vendor collection
  $_porder = Mage::getModel('sales/order')->load($porder['entity_id']); //var_dump($_porder->getData()); echo '<br />'; ?>
    <?php $poItems = array(); $pOrderId = Mage::getModel('udpo/po')->setOrder($_porder)->getData('order_id'); ?>
