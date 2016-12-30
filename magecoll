@@ -1,4 +1,27 @@
 
+<aside class="col-md-3 col-sm-3 colxs-12 shop_product_side_filter">
+<?php $vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id();
+      $cvendor = Mage::helper('umicrosite')->getCurrentVendor(); $categories = array();
+      $assocProds = $cvendor->getAssociatedProductIds(); //var_dump($assocProds);
+      $vendorproducts = count($assocProds);
+      foreach($assocProds as $pId){
+        $cIds = Mage::getModel('catalog/product')->load($pId)->getCategoryIds();
+        if(count($cIds) > 0){ $categories = array_merge($cIds); }
+      }
+      $categories = array_unique($categories); ?>
+<?php $categoryRColl = Mage::getResourceModel('catalog/category_collection')
+                                ->addAttributeToSelect('name', 'url_key', 'url_path')
+                                ->addIdFilter($categories)
+                                ->addAttributeToFilter('is_active',1)
+                                ->addAttributeToFilter('level',2)
+                                ->setLoadProductCount('true')
+                                ->load(); //echo count($categoryRColl); ?>
+
+<div class="clearfix"></div>
+</aside>
+
+
+
 <?php
     $enabledFeaturedCategories  = Mage::helper('featuredcategory')->isEnabledFeaturedCategories();
     $imageCategoriesWidth       = Mage::helper('featuredcategory')->getImageCategoriesWidth();
