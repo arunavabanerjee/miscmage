@@ -1,4 +1,9 @@
 
+
+
+
+
+
 <?php
   if(empty($errors)){
     $uname = $request->getPost('username'); $erroruname = array(); 
@@ -12,9 +17,6 @@
     }
  } ?>
  
-
-
-
 <reference name="head">
     <!-- For a JS in the js folder -->
     <action method="removeItem"><type>js</type><name>functions.js</name></action>
