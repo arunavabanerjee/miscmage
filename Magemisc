@@ -1,8 +1,16 @@
 
+<?php
+$reviewViewBlock = Mage::app()->getLayout()->createBlock('review/customer_view');
+$reviewViewBlock->setReviewId($_review->getReviewId());
+echo $reviewViewBlock->setTemplate('review/customer/view.phtml')->toHtml(); 
 
+------
 
+Mage::helper('core')->formatDate($this->dateFormat($this->getReviewData()->getCreatedAt()))
 
+------
 
+?>
 
 <?php
   if(empty($errors)){
