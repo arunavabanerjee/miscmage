@@ -1,15 +1,26 @@
 
+
+<?php $__product = $this->getProductData(); $options = $__product->getProductOptions(); 
+ $prodOptions = $options['options']; //var_dump($prodOptions);
+ if($prodOptions != NULL){ 
+ foreach($prodOptions as $option){ 
+   if($option['option_type'] == "file"){ $mediaAttrs = unserialize($option['option_value']); ?>
+   <p><a href="<?php echo Mage::getUrl($mediaAttrs['url']['route'], $mediaAttrs['url']['params']); ?>"
+      <label><?php echo $option['label'].' : '. $option['print_value']; ?></label></a></p>
+   <?php } else { ?>
+   <p><label><?php echo $option['label'].' : '. $option['print_value']; ?></label></p>
+   <?php } ?>
+<?php }} ?>
+
+--------------------------------------------------------------------------------------------------------
+
 <?php
 $reviewViewBlock = Mage::app()->getLayout()->createBlock('review/customer_view');
 $reviewViewBlock->setReviewId($_review->getReviewId());
 echo $reviewViewBlock->setTemplate('review/customer/view.phtml')->toHtml(); 
-
 ------
-
 Mage::helper('core')->formatDate($this->dateFormat($this->getReviewData()->getCreatedAt()))
-
 ------
-
 ?>
 
 <?php
