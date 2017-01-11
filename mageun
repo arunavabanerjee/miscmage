@@ -1,4 +1,50 @@
  
+<aside class="col-md-3 col-sm-3 col-xs-12 shop_product_side_filter">^M
+        <?php $layerVwBlock = Mage::app()->getLayout()->createBlock('catalog/layer_view'); ?>^M
+        <?php $cfilters = $layerVwBlock->getFilters(); ?>^M
+        <?php //$cvendorproductIds = Mage::helper('umicrosite')->getCurrentVendor()->getAssociatedProductIds(); ?>^M
+        <?php $cVendorProds =  Mage::getModel('catalog/product')->getCollection()^M
+                                                                ->addAttributeToFilter('vendor_publish', 1)^M
+                                        ->addFieldToFilter('udropship_vendor', $vendor_id); ?> ^M
+        <?php Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($cVendorProds);?>^M
+        <?php $cvendorproducts = count($cVendorProds); ?>^M
+        <ul class="shop_filter_box">    ^M
+                <li>^M
+                        <a class="clearfix" href="#"><?php echo $this->__('All'); ?> <span class="pull-right"><?php echo  $cvendorproducts; ?></span></a>^M
+                </li>^M
+                <?php foreach($cfilters as $cfilter){ if($cfilter->getType() == "catalog/layer_filter_category"){ ?>^M
+                <li>^M
+                        <?php echo $cfilter->getHtml(); ?>^M
+                </li>^M
+                <?php }} ?>^M
+        </ul>
+</aside>^M
+
+<aside class="col-md-3 col-sm-3 colxs-12 shop_product_side_filter">^M
+        <?php //$vendor_id = Mage::helper('umicrosite')->getCurrentVendor()->getvendor_id(); ^M
+                  $cvendor = Mage::helper('umicrosite')->getCurrentVendor(); $categories = array();^M
+                  $assocProds = $cvendor->getAssociatedProductIds(); //var_dump($assocProds);   ^M
+                  $vendorproducts = count($assocProds);^M
+                  foreach($assocProds as $pId){ ^M
+                        $cIds = Mage::getModel('catalog/product')->load($pId)->getCategoryIds(); ^M
+                        if(count($cIds) > 0){ $categories = array_merge($cIds); } ^M
+                  } ^M
+                  $categories = array_unique($categories); ^M
+                  /*$categoryRColl = Mage::getResourceModel('catalog/category_collection')^M
+                        ->addAttributeToSelect('name', 'url_key', 'url_path')^M
+                        ->addIdFilter($categories)^M
+                        ->addAttributeToFilter('is_active',1)^M
+                        ->addAttributeToFilter('level',2)^M
+                        ->setLoadProductCount('true')^M
+                        ->load(); *///echo count($categoryRColl); ?>^M
+        <div class="clearfix"></div>^M
+</aside>^M
+^M
+
+
+ 
+ 
+ 
  // get review block 
  <?php echo Mage::app()->getLayout()->createBlock('review/form')
                        ->setData('pid', $cdata['product_id'])
