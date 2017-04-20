@@ -3,6 +3,52 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCweO2okyDMj7-asSAs1u4x2Irui0syrlI"></script> 
 <script>
   $(document).ready(function(){ 
+    //var zip_in='700104'; 
+    //var zip_in = 'Jessore Rd'+'Dum Dum'+'Kolkata'+'West Bengal'+'700052';
+    var zip_in = 'Jessore Rd, Dum Dum, Kolkata, West Bengal. 700052';
+    if ((zip_in.length >= 6)){ 
+            $.ajax({
+                 //asyn: false,
+                 //url: "http://maps.googleapis.com/maps/api/geocode/json?address="+ zip_in +"&sensor=false&components=country:IN",
+                 url: "http://maps.googleapis.com/maps/api/geocode/json?address="+ zip_in +"&sensor=false",
+                 cache: false,
+                 dataType: "json",
+                 type: "GET",
+                 success: function(result, success) {
+                    //console.log(result);
+                    //-- google --//
+                    //$j("#city").val(result.results[0].address_components[1].long_name);
+                    //$j("#state").val(result.results[0].address_components[3].long_name);
+                    lattitude = result.results[0].geometry.location.lat; 
+                    longitude = result.results[0].geometry.location.lng; 
+                    //console.log(lattitude); console.log(longitude);
+                                        
+                    var myLatlng = new google.maps.LatLng(lattitude, longitude); 
+                    var myOptions = { zoom: 14, center: myLatlng, mapTypeId: google.maps.MapTypeId.ROADMAP };
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions); 
+                    var marker = new google.maps.Marker({ position: myLatlng, map: map }); 
+                                       
+                 },
+                 error: function(result, error) {
+                        //console.log(result);
+                        console.log(error);
+                 },
+                 complete: function(result, success) {
+                        //console.log(result);
+                        console.log(success);					
+                 }
+           });
+
+     }
+     
+  });
+</script>
+
+
+<!------------------------------------- Googel Map Integration------------------------------------!-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCweO2okyDMj7-asSAs1u4x2Irui0syrlI"></script> 
+<script>
+  $(document).ready(function(){ 
     var zip_in='700104'; 
     if ((zip_in.length == 6)){ 
             $.ajax({
