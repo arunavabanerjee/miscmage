@@ -8,3 +8,6 @@ d. theme is viewed in admin panel at "content > themes"
 e. now the theme can be set to a store. 
 f. parent theme in this case is magento/luma. 
 
+//--- setting as store theme.
+a. content > configuration > set store theme. 
+
