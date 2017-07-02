@@ -1,0 +1,10 @@
+
+//--- listing a new theme in the adminpanel. 
+a. 3 files - composer.json, theme.xml, registration.php 
+b. another media directory containing the preview image req. 
+c. contents to be saved in "app/design/frontend/Magento" for a magento type theme. 
+//--- view theme in admin
+d. theme is viewed in admin panel at "content > themes"
+e. now the theme can be set to a store. 
+f. parent theme in this case is magento/luma. 
+
