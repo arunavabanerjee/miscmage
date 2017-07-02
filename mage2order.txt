@@ -11,3 +11,17 @@ f. parent theme in this case is magento/luma.
 //--- setting as store theme.
 a. content > configuration > set store theme. 
 
+//creating a layout and templates for the theme. 
+a. create a folder named "Magento_Theme".
+b. create a folder named "page_layout" inside. 
+c. cp "module-theme/view/frontend/page_layout/1column.xml" to "page_layout". 
+d. rename that to homepage.xml.
+e. create a layouts.xml file and write similar content with id as "homepage". 
+f. assign the new layout to the home page from the admin panel. 
+
+//creation of templates
+a. cp "module-theme/view/frontend/templates" to "Magento_theme". 
+b. all templates will now be pulled from the new theme. 
+
+
+
