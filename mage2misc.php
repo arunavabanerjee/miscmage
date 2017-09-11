@@ -1,4 +1,7 @@
 
+//mysqldump 
+mysqldump -u root -p test_bigphoneshop_v1 > test_bigphoneshop_v1.sql
+
 //total records in the collections
  <?php
     $objManager = \Magento\Framework\App\ObjectManager::getInstance();
