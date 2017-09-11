@@ -1,4 +1,7 @@
 
+//clone a git branch
+git clone [url] -b [branch-name]
+
 //mysqldump 
 mysqldump -u root -p test_bigphoneshop_v1 > test_bigphoneshop_v1.sql
 
