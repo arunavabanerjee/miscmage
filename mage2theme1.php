@@ -61,6 +61,7 @@ d. --- registration.php
     'frontend/Magento/modluma',
     __DIR__
 );
+e. --- Setting the "media/preview.png" 
 
 
 
