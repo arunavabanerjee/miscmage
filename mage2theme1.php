@@ -55,14 +55,31 @@ d. --- registration.php
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::THEME,
     'frontend/Magento/modluma',
     __DIR__
 );
 e. --- Setting the "media/preview.png" 
-
+=======================================================================
+'Layout Define':    
+--------------
+The basic view of all Magento storefront pages in defined in two page configuration 
+layout files located in the Magento_Theme module. 
+<Magento_Theme_module_dir>/view/frontend/layout/default.xml: defines the default page layout.   
+<Magento_Theme_module_dir>/view/frontend/layout/default_head_blocks.xml: defines the scripts, images, 
+and meta data included in pages’ <head> section
+------------------------------------------------------- 
+Module and theme layout files: 
+------------------------------
+The following terms are used to distinguish layouts provided by different application components:
+Base layouts: Layout files provided by modules. Conventional location:
+   Page configuration and generic layout files: <module_dir>/view/frontend/layout
+   Page layout files: <module_dir>/view/frontend/page_layout
+Theme layouts: Layout files provided by themes. Conventional location:
+   Page configuration and generic layout files: <theme_dir>/<Namespace>_<Module>/layout
+   Page layout files: <theme_dir>/<Namespace>_<Module>/page_layout
+------------------------------------------------------
 
 
 
