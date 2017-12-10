@@ -115,7 +115,13 @@ Removing resources:
         <remove src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
         <remove src="http://fonts.googleapis.com/css?family=Montserrat" /> 
    </head>
-
+============================================================================================================
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeInformation = $objectManager->create('Magento\Store\Model\Information');
+$store = $objectManager->create('Magento\Store\Model\Store');
+$storeInfo = $storeInformation->getStoreInformationObject($store);
+$store_email = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('trans_email/ident_general/email');
+$store_phone = $storeInfo->getPhone();
 
 
 
