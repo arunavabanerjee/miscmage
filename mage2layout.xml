@@ -66,11 +66,11 @@
                         </arguments>
                     </block>
                     <block class="Magento\Store\Block\Switcher" name="store_language" as="store_language" template="Magento_Store::switch/languages.phtml"/>
-                    <!--<block class="Magento\Customer\Block\Account\Navigation" name="top.links">
+                    <block class="Magento\Customer\Block\Account\Navigation" name="top.links">
                         <arguments>
                             <argument name="css_class" xsi:type="string">header links</argument>
                         </arguments>
-                    </block>-->
+                    </block>
 
 		<!--<referenceBlock name="my-account-link" remove="true" />-->
 		<!--<referenceBlock name="register-link" remove="true" />-->
