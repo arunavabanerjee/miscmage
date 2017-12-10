@@ -80,6 +80,21 @@ Theme layouts: Layout files provided by themes. Conventional location:
    Page configuration and generic layout files: <theme_dir>/<Namespace>_<Module>/layout
    Page layout files: <theme_dir>/<Namespace>_<Module>/page_layout
 ------------------------------------------------------
+============================================================================================================
+Removing resources: 
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+   <head>
+        <!-- Remove local resources -->
+        <remove src="css/styles-m.css" />
+        <remove src="my-js.js"/>
+        <remove src="Magento_Catalog::js/compare.js" />
+								
+	<!-- Remove external resources -->
+        <remove src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+        <remove src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
+        <remove src="http://fonts.googleapis.com/css?family=Montserrat" /> 
+   </head>
+
 
 
 
