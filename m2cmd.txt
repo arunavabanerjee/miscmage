@@ -1,4 +1,58 @@
-misterac@mister-accessoires.com [~/public_html/sitetest]# php ./bin/magento 
+
+
+UPDATE core_config_data SET `value` = NULL WHERE path = 'design/theme/theme_id';
+
+-----------------------------------------------------------------------------------------------
+
+You should use `bin/magento theme:uninstall`
+
+However, if you already deleted the theme Vendor folder, you must clear the theme references out of the database.
+
+1. Delete the content from app/design/frontend/<Vendor>
+
+2. Delete the `var/view_preprocessed` & `var/di` & `pub/static/frontend` folders.
+
+3. Database: `SELECT * FROM theme;` (find entry for your theme) `DELETE FROM theme WHERE theme_id = '<theme_number>'`
+
+4. Database: `SELECT * FROM core_config_data WHERE path like '%theme%'; (replace your old theme id with the default theme id in any place the records have your old theme id).
+
+5. If production mode, deploy static content `bin/magento setup:static-content:deploy` & recompile `bin/magento setup:di:compile`
+
+5. Flush cache
+
+This is not exhaustive in regards to the database, there could be other tables that harbor illegitimate references to the old theme, but this is what I know about and is a start.
+
+
+------------------------------------------------------------------------------------------------
+
+php ./bin/magento cache:clean
+php ./bin/magento cache:flush
+rm -rf ./pub/static/frontend/*
+
+rm -rf pub/static/* var/di var/generation var/cache var/page_cache
+
+------------------------------------------------------------------------------------------------
+
+How to fix the problem
+
+Increase the memory limit (e.g., up to 2048M) in the following places:
+1. .user.ini
+magento/magento2/blob/2.1.6/.user.ini#L1-L1  ( memory_limit = 768M )
+
+2. .htaccess (2 places)
+magento/magento2/blob/2.1.6/.htaccess#L4-L4 ( php_value memory_limit 768M )
+magento/magento2/blob/2.1.6/.htaccess#L10-L10 ( php_value memory_limit 768M )
+
+3.pub/.user.ini
+magento/magento2/blob/2.1.6/pub/.user.ini#L1-L1 ( memory_limit = 768M )
+
+4. pub/.htaccess (2 places)
+magento/magento2/blob/2.1.6/pub/.htaccess#L39-L39 ( php_value memory_limit 768M )
+magento/magento2/blob/2.1.6/pub/.htaccess#L62-L62 ( php_value memory_limit 768M )
+
+------------------------------------------------------------------------------------------------
+
+# php ./bin/magento 
 Magento CLI version 2.2.1
 
 Usage:
@@ -114,7 +168,7 @@ misterac@mister-accessoires.com [~/public_html/sitetest]#
 
 -----------------------------------------------------------------------
 
-misterac@mister-accessoires.com [~/public_html/sitetest]# php ./bin/magento help
+# php ./bin/magento help
 Usage:
   help [options] [--] [<command_name>]
 
