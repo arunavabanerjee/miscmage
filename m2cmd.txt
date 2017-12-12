@@ -6,6 +6,42 @@ UPDATE core_config_data SET `value` = NULL WHERE path = 'design/theme/theme_id';
 
 -----------------------------------------------------------------------------------------------
 
+Now to solve the above error follow the under given steps:
+
+Step 1: Open your include/config.php file and add the following line:
+
+ini_set('memory_limit', '512M');
+
+In this way you will increase the memory limit for your script to 512MB. 
+You should paste the above code in a file which is always invoked when the script is executed.
+
+
+Step 2: Open the .htaccess file from the magento root directory and around line 35 replace the
+
+php_value memory_limit 256M
+
+with
+
+php_value memory_limit 512M
+
+
+Step 3: From the magento root directory rename the php.ini.sample file to php.ini
+
+
+Step 4: Open the php.ini file and replace the
+
+memory_limit = 64M
+
+with
+
+memory_limit = 512M
+
+
+Step 5: Go to Admin -> System -> Cache Management and refresh all the cache. That’s it.
+
+
+-----------------------------------------------------------------------------------------------
+
 You should use `bin/magento theme:uninstall`
 
 However, if you already deleted the theme Vendor folder, you must clear the theme references out of the database.
