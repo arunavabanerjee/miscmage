@@ -1,4 +1,5 @@
 
+php -dmemory_limit=6G bin/magento setup:di:compile
 
 php -dmemory_limit=6G bin/magento setup:static-content:deploy
 
