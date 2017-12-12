@@ -1,5 +1,7 @@
 
 
+php -dmemory_limit=6G bin/magento setup:static-content:deploy
+
 UPDATE core_config_data SET `value` = NULL WHERE path = 'design/theme/theme_id';
 
 -----------------------------------------------------------------------------------------------
