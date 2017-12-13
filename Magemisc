@@ -1,4 +1,59 @@
 
+If you want to create an instance from inside an other block do it like this:
+
+$this->getLayout()->createBlock('Full\Block\Class\Name\Here');
+From inside a controller do this:
+
+ $this->_view->getLayout()->createBlock('Full\Block\Class\Name\Here');
+From inside a model:
+
+ $this->_blockFactory->createBlock('Full\Block\Class\Name\Here');
+but here there is a catch.
+you have to create a protected member on the model called _blockFactory and inject an instance of \Magento\Framework\View\Element\BlockFactory in the constructor and assign it to that member var.
+
+Something like this:
+
+protected $_blockFactory;
+public function __construct(
+   ...,
+   \Magento\Framework\View\Element\BlockFactory $blockFactory,
+   ....
+){
+    ....
+    $this->_blockFactory = $blockFactory;
+    ....
+}
+For instantiating a block from inside a helper it works the same as for model
+
+----------------------------------------------------------------------------------------------------
+
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var \Magento\Theme\Block\Html\Header $block
+ */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeInformation = $objectManager->create('Magento\Store\Model\Information');
+$store = $objectManager->create('Magento\Store\Model\Store');
+$storeInfo = $storeInformation->getStoreInformationObject($store);
+$store_phone = $storeInfo->getPhone();
+$store_email = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('trans_email/ident_general/email');
+?>
+<ul class="left-ul">
+   <li><?php echo $store_email; ?></li>
+   <li>/</li>
+   <li><?php echo $store_phone; ?></li>
+</ul>
+
+
+
+-----------------------------------------------------------------------------------------------------------
 
 <?php $__product = $this->getProductData(); $options = $__product->getProductOptions(); 
  $prodOptions = $options['options']; //var_dump($prodOptions);
