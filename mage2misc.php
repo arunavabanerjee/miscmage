@@ -6,6 +6,18 @@
         ->setTemplate('Magento_Search::form.mini.phtml');->toHtml(); ?>
 
 
+--------------------------------------------------------------------------
+
+
+{{block class="Magento\HelloWorld\Block\HelloWorld" name="your_block_name" template="Magento_HelloWorld::helloworld.phtml"}}
+
+echo $this->getLayout()
+          ->createBlock('Magento\HelloWorld\Block\HelloWorld')
+          ->setTemplate('Magento_HelloWorld::helloworld.phtml')
+          ->toHtml();
+
+--------------------------------------------------------------------------
+
 //clone a git branch
 git clone [url] -b [branch-name]
 
