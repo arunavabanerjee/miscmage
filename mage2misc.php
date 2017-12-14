@@ -1,4 +1,11 @@
 
+/// get layout
+    <?php 
+    echo $this->getLayout()
+        ->createBlock('Magento\Framework\View\Element\Template')
+        ->setTemplate('Magento_Search::form.mini.phtml');->toHtml(); ?>
+
+
 //clone a git branch
 git clone [url] -b [branch-name]
 
