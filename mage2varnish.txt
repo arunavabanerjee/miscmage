@@ -3,3 +3,39 @@ Install varnish
 -----------------
 apt-get install varnish. 
 
+Configure varnish
+-------------------
+One with the starter parameter:
+
+/etc/default/varnish
+This file contains all the starter parameters.
+
+The other is the default VCL file:
+
+For systemd, the VCL file is directed in a different manner. It will be located in:
+
+/etc/systemd/system/varnish.service
+which will point to:
+
+/etc/varnish/default.vcl
+However, there is a builtin.vcl that is always appended to the VCL you define/specify in this default.vcl.
+
+
+Open /etc/default/varnish in a text editor
+You will see a code like the one below
+
+DAEMON _OPTS="-a :80\
+  -T localhost:6082
+  -f /etc/varnish/default.vcl
+  -s malloc,256m"
+  -S /etc/varnish/secret
+  
+ --------------------------------------------------------------------------------------------------
+ 
+ Configure your web server
+
+Configure your web server to listen on a port other than the default port 80 because Varnish responds directly to incoming HTTP requests, not the web server.
+
+In the sections that follow, we use port 8080 as an example.
+
+
