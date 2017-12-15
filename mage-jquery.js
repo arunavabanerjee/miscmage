@@ -1,4 +1,12 @@
 
+
+<?php 
+echo $this->getLayout()
+        ->createBlock('Magento\CatalogSearch\Block\Advanced\Form')
+        ->setTemplate('Magento_CatalogSearch::advanced/form.phtml')->toHtml(); ?>
+
+
+
     <script>
     require(["jquery"], function($){
         $('.car-form .nav-tabs li').click(function(){ //alert('this');
