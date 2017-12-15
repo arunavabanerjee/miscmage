@@ -1,4 +1,25 @@
 
+    <script>
+    require(["jquery"], function($){
+        $('.car-form .nav-tabs li').click(function(){ //alert('this');
+          $('.car-form .nav-tabs li').each(function(){ 
+              $(this).removeClass('active');
+          });
+          $('.car-form .tab-content div').each(function(){ 
+             $(this).removeClass('in active'); 
+          });
+          $(this).addClass('active'); 
+          var $liattr = $(this).find('a').attr('href').replace('#', ''); 
+          $('.car-form .tab-content div').each(function(){ 
+             if( $liattr == $(this).attr('id') ){ 
+                 $(this).addClass('in active'); 
+             } 
+          });
+        });
+    });
+    </script>
+
+------------------------------------------------------------
 <script>
  require(["jquery", "bootstrapJS"], function($){
    $(document).ready(function(){
