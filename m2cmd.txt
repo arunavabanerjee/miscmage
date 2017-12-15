@@ -6,8 +6,9 @@ php -dmemory_limit=6G bin/magento setup:upgrade
 php ./bin/magento setup:di:compile
 php -dmemory_limit=6G bin/magento setup:di:compile
 
-
-
+rm -rf ./pub/static/frontend/*
+rm -rf ./var/view_preprocessed/*
+rm -rf ./var/cache/*
 
 
 -----------------------------------------------------------------------------------------------
