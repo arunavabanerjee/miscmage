@@ -9,6 +9,8 @@ php -dmemory_limit=6G bin/magento setup:di:compile
 rm -rf ./pub/static/frontend/*
 rm -rf ./var/view_preprocessed/*
 rm -rf ./var/cache/*
+rm -rf ./var/page_cache/*
+
 -----------------------------------------------------------------------------------------------
 
 Magento CLI version 2.2.1
