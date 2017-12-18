@@ -13,6 +13,19 @@ rm -rf ./var/page_cache/*
 
 -----------------------------------------------------------------------------------------------
 
+You need to remove it manually, if it is ubuntu then locate in your magento 2 root directory 
+and run rm -rf var/generation and rm -rf var/cache command.
+
+Then try to run below commands in sequence.
+
+    php bin/magento setup:di:compile
+    php bin/magento setup:upgrade
+    php bin/magento cache:clean
+    php bin/magento cache:flush
+
+
+-----------------------------------------------------------------------------------------------
+
 Magento CLI version 2.2.1
 
 Usage:
