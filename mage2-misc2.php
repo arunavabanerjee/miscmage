@@ -1,4 +1,18 @@
 
+//submit button
+$('#menu2 .search-btn').click(function(){
+var $l1Url =  $('#level-1 option:selected').attr('data-href');   
+var $l2Url =  $('#level-2 option:selected').attr('data-href');    
+var $l3Url =  $('#level-3 option:selected').attr('data-href');    
+
+if( $l3Url != ''){ window.location.assign( $l3Url ); }
+if( $l2Url != ''){ window.location.assign( $l2Url ); }
+if( $l1Url != ''){ window.location.assign( $l1Url ); }
+
+});
+
+
+======================================================================================================
 <?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $catId = 803; // Parent Category ID
