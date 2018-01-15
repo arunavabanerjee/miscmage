@@ -1,4 +1,12 @@
 
+rm -rf ./pub/static/frontend/*
+php -dmemory_limit=4G bin/magento setup:static-content:deploy -f
+
+php -dmemory_limit=4G bin/magento store:list 
+
+
+
+------------------------------------------------------------------------------------------------
 
 php ./bin/magento setup:upgrade
 php -dmemory_limit=6G bin/magento setup:upgrade
