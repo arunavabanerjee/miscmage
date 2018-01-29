@@ -1,4 +1,23 @@
 
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$collection = $productCollection->create()->addAttributeToSelect('*')->load();
+$storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$currentStoreId = $storeManager->getStore()->getId();
+$rating = $objectManager->get("Magento\Review\Model\ResourceModel\Review\CollectionFactory");
+
+//== get product collection
+foreach ($collection as $product){ echo 'Name  =  '.$product->getId().'<br>';
+   $reviewcollection = $rating->create()->addStoreFilter( $currentStoreId )
+   			->addStatusFilter( \Magento\Review\Model\Review::STATUS_APPROVED )
+   			->addEntityFilter( 'product', $product->getId() )->setDateOrder();	
+   echo "<pre>";
+   print_r($reviewcollection->getData()); 	
+} 
+?>
+
+//=============================================================================================
 
 <div id="menu2" class="tab-pane fade">
 <?php
