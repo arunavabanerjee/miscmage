@@ -5,15 +5,23 @@ $productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel
 $collection = $productCollection->create()->addAttributeToSelect('*')->load();
 $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
 $currentStoreId = $storeManager->getStore()->getId();
-$rating = $objectManager->get("Magento\Review\Model\ResourceModel\Review\CollectionFactory");
+$reviews = $objectManager->get("Magento\Review\Model\ResourceModel\Review\CollectionFactory");
 
 //== get product collection
 foreach ($collection as $product){ echo 'Name  =  '.$product->getId().'<br>';
-   $reviewcollection = $rating->create()->addStoreFilter( $currentStoreId )
+   $reviewcollection = $reviews->create()->addStoreFilter( $currentStoreId )
    			->addStatusFilter( \Magento\Review\Model\Review::STATUS_APPROVED )
    			->addEntityFilter( 'product', $product->getId() )->setDateOrder();	
-   echo "<pre>";
-   print_r($reviewcollection->getData()); 	
+   //echo "<pre>"; print_r($reviewcollection->getData());
+   //$reviewFactory = $objectManager->create('Magento\Review\Model\Review');
+   //$reviewFactory->getEntitySummary($product, $currentStoreId);
+   //$ratingSummary = $product->getRatingSummary()->getRatingSummary();	
+   //echo $ratingSummary;
+   
+   //loop through the review collection
+   foreach($reviewcollection as $review){
+	echo "<pre>"; print_r($review->getData());
+   }				  
 } 
 ?>
 
