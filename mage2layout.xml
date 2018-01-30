@@ -1,4 +1,58 @@
 
+//------------default.xml
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header.panel">
+	  <container name="header.inner.panel" as="inner.panel" htmlTag="div" htmlClass="top panel">
+            <block class="Magento\Framework\View\Element\Html\Links" name="header.links">
+                <arguments>
+                    <argument name="css_class" xsi:type="string">header links</argument>
+                </arguments>
+            </block>
+	  </container>
+        </referenceContainer>
+	<referenceContainer name="header-wrapper" htmlTag="div" htmlClass="header content customwrap">
+	<container name="header.inner.wrapper" as="new.wrapper" htmlTag="div" htmlClass="header_wrap" before="-">
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_img_width" xsi:type="number">148</argument>
+                <argument name="logo_img_height" xsi:type="number">43</argument>
+            </arguments>
+        </referenceBlock>
+	</container>
+	</referenceContainer>
+	<referenceBlock name="catalog.topnav">
+		<block class="Magento\Framework\View\Element\Html\Link\Current" name="my-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">My Cart</argument>
+                    <argument name="path" xsi:type="string">checkout/cart</argument>
+		    <argument name="my_cart_file" xsi:type="string">images/fam_book_open.png</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="my-link1">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Checkout</argument>
+                    <argument name="path" xsi:type="string">checkout</argument>
+		    <argument name="attributes" xsi:type="array">
+         		<item name="target" xsi:type="string">_blank</item>
+			<!-- image can be added via class -->	
+			<item name="class" xsi:type="string">default-link1</item>
+			<item name="style" xsi:type="string">color:#000;background:#f00;</item>			
+      		    </argument>
+		    <argument name="checkout_file" xsi:type="string">images/fam_book_open.png</argument>
+                </arguments>
+            </block>           
+	</referenceBlock>
+        <referenceContainer name="footer">
+            <block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" after="footer_links" template="switch/stores.phtml"/>
+        </referenceContainer>
+        <referenceBlock name="report.bugs" remove="true"/>
+        <move element="copyright" destination="before.body.end"/>
+    </body>
+</page>
+
+
+================================================================
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
