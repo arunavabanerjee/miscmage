@@ -1,4 +1,15 @@
 
+//---------- allowed attributes
+https://github.com/magento/magento2/blob/develop/lib/internal/Magento/Framework/View/Element/Html/Link.php
+protected $allowedAttributes = [
+ 'href', 'title', 'charset', 'name', 'target', 'hreflang', 'rel', 'rev', 'accesskey',
+ 'shape', 'coords', 'tabindex', 'onfocus', 'onblur', // %attrs
+ 'id', 'class', 'style', // %coreattrs
+ 'lang', 'dir', // %i18n
+ 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove',
+ 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup', // %events
+];
+
 //------------default.xml
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
