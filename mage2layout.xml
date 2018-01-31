@@ -1,5 +1,7 @@
 
 //----------blocks
+custom template
+<block class="Magento\Framework\View\Element\Template" name="customtext" template="Magento_Search::customtext.phtml" />
 In Phtml File:
 <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('block_identifier')->toHtml();?>
 in CMS Content:
