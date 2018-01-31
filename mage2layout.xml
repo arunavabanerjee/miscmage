@@ -1,4 +1,19 @@
 
+//----------blocks
+In Phtml File:
+<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('block_identifier')->toHtml();?>
+in CMS Content:
+{{block class="Magento\\Cms\\Block\\Block" block_id="block_identifier"}}
+In Xml File:
+<referenceContainer name="content">
+    <block class="Magento\Cms\Block\Block" name="block_identifier">
+        <arguments>
+            <argument name="block_id" xsi:type="string">block_identifier</argument>
+        </arguments>
+    </block>
+</referenceContainer>
+
+
 //------default.xml
 <?xml version="1.0"?>
 <!--
