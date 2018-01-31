@@ -1,4 +1,18 @@
 
+//----layout for homepage only
+First check in your current theme
+app/design/frontend/YourTheme/ThemePackage/Magento_Catalog/layout/catalog_category_view.xml
+app/design/frontend/YourTheme/ThemePackage/Magento_Cms/cms_index_index.xml
+
+Second check in your current theme parent theme.
+app/design/frontend/CurrentParentTheme/ThemePackage/Magento_Catalog/layout/catalog_category_view.xml
+app/design/frontend/CurrentParentTheme/ThemePackage/Magento_Cms/cms_index_index.xml
+
+Third check in core module.
+vendor/magento/module-cms/view/frontend/layout/cms_index_index.xml
+vendor/magento/module-catalog/view/frontend/layout/catalog_category_view.xml
+
+
 //---- css files
 <Magento_Blank_theme_dir>/Magento_Theme/layout/default_head_blocks.xml
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
