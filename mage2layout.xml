@@ -1,4 +1,14 @@
 
+//---- css files
+<Magento_Blank_theme_dir>/Magento_Theme/layout/default_head_blocks.xml
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/styles-m.css" />
+        <css src="css/styles-l.css" media="screen and (min-width: 768px)"/>
+        <css src="css/print.css" media="print" />
+    </head>
+</page>
+
 //----------blocks
 custom template
 <block class="Magento\Framework\View\Element\Template" name="customtext" template="Magento_Search::customtext.phtml" />
