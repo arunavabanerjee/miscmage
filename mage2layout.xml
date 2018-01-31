@@ -1,4 +1,10 @@
 
+//inline script
+In HTML: <element ondblclick="myScript"> 
+In JavaScript: object.ondblclick = function(){myScript}; 
+In JavaScript, using the addEventListener() method:
+object.addEventListener("dblclick", myScript); // not supported in IE8
+
 //---------- allowed attributes
 https://github.com/magento/magento2/blob/develop/lib/internal/Magento/Framework/View/Element/Html/Link.php
 protected $allowedAttributes = [
