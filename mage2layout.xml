@@ -1,3 +1,13 @@
+//--- add widget via layout
+<referenceContainer name="content.top">
+    <block class="Magento\Catalog\Block\Category\Widget\Link" name="demoBlock" template="widget/static_block/default.phtml">
+        <action method="setData">
+            <argument name="id_path" xsi:type="string">category/20</argument>
+            <argument name="title" xsi:type="string">Demo Category Title</argument>
+            <argument name="template" xsi:type="string">category/widget/link/link_inline.phtml</argument>
+        </action>
+    </block>
+</referenceContainer>
 
 //--- add breadcrumb to template like contact us
 <?xml version="1.0"?>
