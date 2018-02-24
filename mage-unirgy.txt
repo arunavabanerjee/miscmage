@@ -1,4 +1,7 @@
 //links:
+https://demo1.unirgy.com/addons/index.php/admin/system_config/edit/section/payment/key/3a3ae280f8dc3bbc42ce9fbceb3ff095/
+Administrator: User: dropship , Password: $!dropship$! 
+
 https://secure.unirgy.com/wiki/en/start
 http://devdocs.magento.com/guides/m1x/magefordev/mage-for-dev-1.html
 http://devdocs.magento.com/guides/m1x/ce19-ee114-home.html
