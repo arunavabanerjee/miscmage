@@ -1,0 +1,5 @@
+//links:
+https://secure.unirgy.com/wiki/en/start
+http://devdocs.magento.com/guides/m1x/magefordev/mage-for-dev-1.html
+http://devdocs.magento.com/guides/m1x/ce19-ee114-home.html
+
