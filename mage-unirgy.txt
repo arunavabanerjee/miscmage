@@ -6,3 +6,83 @@ https://secure.unirgy.com/wiki/en/start
 http://devdocs.magento.com/guides/m1x/magefordev/mage-for-dev-1.html
 http://devdocs.magento.com/guides/m1x/ce19-ee114-home.html
 
+------------------------------------------------------------------------
+//app/etc/BNOverride_Udprod.xml
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <BNOverride_Udprod>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </BNOverride_Udprod>
+  </modules>
+</config>
+----------------------------------
+//<module>/etc/config.xml
+---sample
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <BNOverride_Udprod>
+      <version>0.1.0</version>
+    </BNOverride_Udprod>
+  </modules>
+  <global>
+	<helpers>
+	        <review>
+        	    <rewrite>
+        	        <data>MyNamespace_MyModule_Helper_Review_Data</data>
+        	    </rewrite>
+        	</review>
+	</helpers>
+	<!--<models>
+		<review>
+			<rewrite>
+				<review>MyNamespace_Review_Model_Review_Review</review>
+			</rewrite>
+		</review>
+	</models>-->
+  </global>
+</config>
+--------------------------------------------------
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <BNOverride_Udprod>
+      <version>0.1.0</version>
+    </BNOverride_Udprod>
+  </modules>
+
+  <global>
+	<helpers>
+	        <review>
+        	    <rewrite>
+        	        <data>BNOverride_Udprod_Helper_Data</data>
+        	    </rewrite>
+        	</review>
+	</helpers>
+	<!--<models>
+		<review>
+			<rewrite>
+				<review>Banaann_Review_Model_Review_Review</review>
+			</rewrite>
+		</review>
+	</models>-->
+  </global>
+</config>
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
