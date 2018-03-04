@@ -1,0 +1,114 @@
+====================================================
+=== featured -- app/etc/modules/MGOverride_All.xml
+====================================================
+<config>
+    <modules>
+        <MGOverride_FeaturedProducts>
+            <active>true</active>
+            <codePool>local</codePool>
+	          <version>0.0.1</version>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </MGOverride_FeaturedProducts>
+        <!--<MGOverride_Catalog>
+            <active>true</active>
+            <codePool>local</codePool>
+	          <version>0.0.1</version>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </MGOverride_Catalog>-->
+    </modules>
+</config>
+==================================================
+
+
+
+
+===================================================
+=== blog magento -- app/etc/modules/MGOverride_All.xml
+=== a. a new webblog module
+<config>
+    <modules>
+        <!--<MGOverride_Catalog>
+            <active>true</active>
+            <codePool>local</codePool>
+	          <version>0.0.1</version>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </MGOverride_Catalog>-->
+	      <MGOverride_WebBlog>
+            <active>true</active>
+            <codePool>local</codePool>
+	          <version>0.0.1</version>
+	      </MGOverride_WebBlog>
+    </modules>
+</config>
+================================================
+=== b. create a db table
+
+
+
+
+Add Model information to the config for a Model named Blogpost
+
+Add Model Resource information to the config for the Blogpost Model
+
+Add A Read Adapter to the config for the Blogpost Model
+
+Add A Write Adapter to the config for the Blogpost Model
+
+Add a PHP class file for the Blogpost Model
+
+Add a PHP class file for the Blogpost Model
+
+Instantiate the Model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
