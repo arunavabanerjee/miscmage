@@ -1,4 +1,5 @@
 
+
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $requestInterface = $objectManager->get('Magento\Framework\App\RequestInterface');
 
@@ -9,6 +10,17 @@ echo $actionName     = $requestInterface->getActionName();
 
 $urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
 echo $urlInterface->getCurrentUrl();
+
+<?php //$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+//$request = $objectManaget->get('Magento\Framework\App\Request\Http');
+//var_dump($request->getData());
+
+//$category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');//get current category 
+//$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product ?>
+<?php //echo $category->getId(); echo '</br>';
+//echo $product->getId();
+
+
 
 ===========================================================================
 
