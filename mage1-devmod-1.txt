@@ -52,6 +52,7 @@
 
 
 
+
 Add Model information to the config for a Model named Blogpost
 
 Add Model Resource information to the config for the Blogpost Model
