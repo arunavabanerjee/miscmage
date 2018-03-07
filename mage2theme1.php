@@ -1,4 +1,17 @@
 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$requestInterface = $objectManager->get('Magento\Framework\App\RequestInterface');
+
+echo $routeName      = $requestInterface->getRouteName();
+echo $moduleName     = $requestInterface->getModuleName();
+echo $controllerName = $requestInterface->getControllerName();
+echo $actionName     = $requestInterface->getActionName();
+
+$urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+echo $urlInterface->getCurrentUrl();
+
+===========================================================================
+
 <?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
