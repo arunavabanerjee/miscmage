@@ -1,3 +1,27 @@
+//custom login logout
+//<block class="Magento\Framework\View\Element\Template" name="section-header-top" template="Magento_Theme::html/header-top.phtml" />
+<li data-bind="scope: 'customer'">
+  <!-- ko if: customer().firstname  -->
+  <a href="<?php echo $this->getUrl('customer/account/logout'); ?>" style="display:none;" data-bind="style: {display:'inline'}"><?php echo __('Sign Out') ?></a>
+  <!-- /ko -->
+  <!-- ko ifnot: customer().firstname  -->
+  <a href="<?php echo $this->getUrl('customer/account/login'); ?>" style="display:none;" data-bind="style: {display:'inline'}"><?php echo __('Sign In') ?></a>
+  <!-- /ko -->
+  <script type="text/x-magento-init">
+  {
+    "*": {
+      "Magento_Ui/js/core/app": {
+        "components": {
+          "customer": {
+            "component": "Magento_Customer/js/view/customer"
+          }
+        }
+      }
+    }
+  }
+  </script>
+</li>
+
 //--- add widget via layout
 <referenceContainer name="content.top">
     <block class="Magento\Catalog\Block\Category\Widget\Link" name="demoBlock" template="widget/static_block/default.phtml">
