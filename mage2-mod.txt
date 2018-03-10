@@ -1,0 +1,29 @@
+//------- MGOverride/OverrideController/etc/module.xml
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Module/etc/module.xsd">
+    <module name="MGOverride_OverrideController" setup_version="0.0.1">
+    </module>
+</config>
+
+-------------------------------------------------------------------------------------
+
+//-------MGoverride/OverrideController/registration.php
+<?php
+/**
+ * @author Default
+ * @copyright Copyright (c) 2015 Amasty (http://www.default.com)
+ * @package PYOverride_NPOverride
+ */
+\Magento\Framework\Component\ComponentRegistrar::register(
+    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    'MGOverride_OverrideController',
+    __DIR__
+);
+
+--------------------------------------------------------------------------------------
+
+
+
+
+
+
