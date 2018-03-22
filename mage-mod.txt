@@ -1,1 +1,4 @@
 
+//display layout handles
+ Zend_Debug::dump($this->getLayout()->getUpdate()->getHandles());
+
