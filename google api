@@ -183,7 +183,7 @@ $j(function() {
 });
 </script>
 =======================================================================================================
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnZg1Rj3rYN0y_btJViphAFKPKVDIHHXA"></script>
 <script>
 jQuery(document).ready(function(){ 
    var inilat = 24.7136; var inilong = 46.6753;  
