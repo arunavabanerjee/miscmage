@@ -182,4 +182,46 @@ $j(function() {
 	});
 });
 </script>
+=======================================================================================================
 
+<script>
+jQuery(document).ready(function(){ 
+   var inilat = 24.7136; var inilong = 46.6753;  
+   initMap(inilat, inilong); 
+});
+
+//on city-field focusout function
+jQuery('.form-list #street1').focusout(function(){ alert('this');
+  var city = jQuery('.form-list #city').val(); 
+  var street = jQuery('.form-list #street1').val();
+  var country = jQuery('.form-list #country_id').val();
+  
+  if(city != '' && street != ''){ 
+     var zip_in = street + ',+' + city + ',+' + country; 
+     var address = zip_in.replace(/ /g, "+"); //console.log(address);
+     jQuery.ajax({
+     	url: "http://maps.googleapis.com/maps/api/geocode/json?address="+ address +"&sensor=false&components=country:SA",
+     	cache: false,
+     	dataType: "json",
+     	type: "GET",
+     	success: function(result, success) { //console.log(result);
+	  lattitude = result.results[0].geometry.location.lat; //console.log(lattitude);
+	  longitude = result.results[0].geometry.location.lng; //console.log(longitude); 
+	  initMap(lattitude, longitude); 
+     }
+  });
+  } 
+});
+
+function initMap(lattitude, longitude) {
+  var place = {lat: lattitude, lng: longitude};
+  var map = new google.maps.Map(document.getElementById('registration-map'), {
+     zoom: 11,
+     center: place
+  });
+  var marker = new google.maps.Marker({
+     position: place,
+     map: map
+  });
+}
+</script>
