@@ -1,3 +1,16 @@
+
+	//check if register button is clicked
+	//if (null === $this->getRequest()->getParam('registerBtn')){
+	//   $session->addError("<div id='register-popup' name='register-popup'> Please Click On The Register Button To Continue </div>");
+	//   $this->_redirect('*/*/register'); return;
+	//}
+
+	//check if register button is clicked
+	//if (null === $this->getRequest()->getParam('homeBtn')){
+	//   $session->addError("<div id='home-popup' name='home-popup'> Please Click On The Home Button To Continue </div>");
+	//   $this->_redirect('*/*/register'); return;
+	//}
+
 //links:
 https://demo1.unirgy.com/addons/index.php/admin/system_config/edit/section/payment/key/3a3ae280f8dc3bbc42ce9fbceb3ff095/
 Administrator: User: dropship , Password: $!dropship$! 
