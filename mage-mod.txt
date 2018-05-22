@@ -1,4 +1,22 @@
 
 //display layout handles
- Zend_Debug::dump($this->getLayout()->getUpdate()->getHandles());
+Zend_Debug::dump($this->getLayout()->getUpdate()->getHandles()); 
+
+//other 
+Mage_Core_Controller_Varien_Action::generateLayoutXml()
+echo $this->getLayout()->getNode();
+
+
+echo $this->getLayout()->getXmlString();
+
+If you want to build an extension, you can observe the event controller_action_layout_generate_blocks_after like this:
+
+public function generateBlocksAfter($observer) {
+    $xml = $observer->getLayout()->getXmlString();
+    //do something with $xml ...print it, write it to a file....
+}
+
+
+
+
 
