@@ -1,4 +1,7 @@
 
+//------ displays all modules in xml file 
+<?php Zend_Debug::dump( Mage::app()->getConfig()->getNode()->asXML() ); die(); ?>
+
 //---- displays the layouts loaded by magento
 <?php 
 header("Content-Type: text/xml");
