@@ -1,0 +1,6 @@
+
+//---- displays the layouts loaded by magento
+<?php 
+header("Content-Type: text/xml");
+die(Mage::app()->getConfig()->getNode()->asXML()); 
+?>
