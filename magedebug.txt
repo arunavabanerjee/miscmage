@@ -4,3 +4,9 @@
 header("Content-Type: text/xml");
 die(Mage::app()->getConfig()->getNode()->asXML()); 
 ?>
+
+//----- list the xml layouts in magento 1
+<?php echo Mage::app()->getConfig()->getNode()->asXml(); echo '<br/><br/>'; ?>
+<?php $Handles=Mage::app()->getLayout()->getUpdate()->getHandles(); ?>
+<?php foreach ($Handles as $handle): echo $handle; endforeach; ?>
+<?php die(); ?>
