@@ -1,0 +1,31 @@
+
+public function getProductImage($image,$width = 270,$height = 270){
+     if($image!="" && file_exists(Mage::getBaseDir('media').DS.$image)){
+
+        $_imageUrl = Mage::getBaseDir('media').DS.$image;
+        $imageResized = Mage::getBaseDir('media').DS.'resized/'.$image;
+        if (!file_exists($imageResized)&&file_exists($_imageUrl)) {
+           $imageObj = new Varien_Image($_imageUrl);
+            $imageObj->constrainOnly(TRUE);
+            $imageObj->keepAspectRatio(TRUE);
+            $imageObj->keepFrame(FALSE);
+            $imageObj->quality(100);
+            $imageObj->resize($width, null);
+            $imageObj->save($imageResized);
+        $resizedURL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "resized/" . $image;
+            return $resizedURL;
+        } 
+        elseif(file_exists($imageResized)) {
+             $resizedURL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "resized/" . $image;
+            return $resizedURL;    
+        }
+        else{
+            return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$image;    
+        }
+    }
+    else
+    {
+        return  Mage::getBaseUrl('media')."banner/resized/240X/placeholder.png";
+    }
+
+}
