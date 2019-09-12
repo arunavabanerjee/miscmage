@@ -1,3 +1,369 @@
+/*corresponding template - themes/default-bootstrap */
+{capture name=path}{l s='Register Opticians'}{/capture}
+<h1 class="font-even-30 text-black f-w-700 text-uppercase mab-40 mat-30">
+	{l s='Opticians Registeration'} - {if isset($customerThread) && $customerThread}{l s='Your reply'}{else}{l s='Form'}{/if}
+</h1>
+{if isset($confirmation)}
+	<p class="alert alert-success">{l s='Your message has been successfully sent to our team.'}</p>
+	<ul class="footer_links clearfix">
+		<li>
+			<a class="btn btn-default button button-small" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
+				<span>
+					<i class="icon-chevron-left"></i>{l s='Home'}
+				</span>
+			</a>
+		</li>
+	</ul>
+{elseif isset($alreadySent)}
+	<p class="alert alert-warning">{l s='Your message has already been sent.'}</p>
+	<ul class="footer_links clearfix">
+		<li>
+			<a class="btn btn-default button button-small" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
+				<span>
+					<i class="icon-chevron-left"></i>{l s='Home'}
+				</span>
+			</a>
+		</li>
+	</ul>
+{else}
+<div class="loginsection mab-60">
+	{include file="$tpl_dir./errors.tpl"}
+	<form id="opticians-register" action="{$request_uri}" method="post" class="contact-form-box" enctype="multipart/form-data">
+		<fieldset>
+			<h3 class="logintitle font-even-18 text-uppercase text-black may-20 text-blue">{l s='Please Enter Following Details:'}</h3>
+			<div class="row clearfix"> 
+				<div class="col-12 col-md-6 border-right-1 border-color-light">
+					<p class="form-group" style="padding-top:10px;font-weight:800;font-size:17px;"><u><strong>Optician Details :</strong></u></p>
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Name'}</label>
+						<input type="text" class="form-control" id="optician_name" name="optician_name" placeholder="Enter Name" value=""/>
+					</p>
+
+					<p class="form-group">					
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Description'}</label>
+						<input type="textarea" class="form-control" id="optician_desc" name="optician_desc" placeholder="Enter Description" value="" />
+					</p>
+
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Phone'}</label>
+						<input type="text" class="form-control" id="optician_phone" name="optician_phone" placeholder="Enter Phone" value="" />
+					</p>
+
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Mobile Phone'}</label>
+						<input type="text" class="form-control" id="optician_mphone" name="optician_mphone" placeholder="Enter Mobile No" value="" />
+					</p>
+				</div>
+
+				<div class="col-12 col-md-6">
+					<p class="form-group" style="padding-top:10px;font-weight:800;font-size:17px;"><u><strong>Optician Address Details :</strong></u></p>
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Address'}</label>
+						<input type="text" class="form-control" id="optician_address1" name="optician_address1" placeholder="Enter Address" value="" />
+					</p>
+
+					<p class="form-group">					
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Address2'}</label>
+						<input type="text" class="form-control" id="optician_address2" name="optician_address2" placeholder="Enter Address(more details)" value="" />
+					</p>
+
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Zip/Postal Code'}</label>
+						<input type="text" class="form-control" id="optician_zip" name="optician_zip" placeholder="Enter Zip/Postal Code" value="" />
+					</p>
+
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter City'}</label>
+						<input type="text" class="form-control" id="optician_city" name="optician_city" placeholder="Enter City" value="" />
+					</p>
+
+					<!--<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter Country'}</label>
+						<input type="text" class="form-control" id="optician_country" name="optician_country" placeholder="Enter Country" value="" />
+					</p>
+
+					<p class="form-group">
+						<label class="font-even-16 f-w-700" for="id_contact">{l s='Enter State'}</label>
+						<input type="text" class="form-control" id="optician_state" name="optician_state" placeholder="Enter State" value="" />
+					</p>-->
+
+					<p class="form-group">
+						<label for="id_contact">{l s='Enter Country'}</label>
+						<select class="form-control" id="optician_country" name="optician_country">
+							<option value="0" selected="selected">{l s='-- Choose --'}</option>
+							{$countries_list}
+						</select>						
+					</p>
+
+					<p class="form-group">
+						<label for="id_contact">{l s='Enter State'}</label>
+						<select class="form-control" id="optician_state" name="optician_state"></select>						
+					</p>
+
+				</div>
+			</div>	
+			<div class="submit">
+				<p class="form-group">
+					<div class="" style="margin-bottom:5px;">
+						<input type="checkbox" class="form-control" id="agree_store" name="agree_store" value="" />
+						<label class="font-even-16 f-w-700" for="id_contact" style="float: left;margin: -19px 0 0 21px;">{l s='By clicking you agree for the site to store your details'}</label>
+					</div>
+					<div class="">	
+						<input type="checkbox" class="form-control" id="agree_terms" name="agree_terms" value="" />
+						<label class="font-even-16 f-w-700" for="id_contact" style="float: left;margin: -19px 0 0 21px;">{l s='By clicking you agree to the Terms and Conditions'}</label>
+					</div>	
+				</p>
+
+				<p class="form-group">
+					<button type="submit" class="loginbtn background-blue text-white f-w-600 font-odd-15 border-radius-5 border-0 exclusive" 
+																						name="submitOpticianDetails" id="submitOpticianDetails">
+						<span>{l s='Submit'}</span>
+					</button>
+				</p>
+			</div>
+		</fieldset>
+	</form>
+</div>	
+{/if}
+{literal}
+<script>
+$(document).on('change', '#optician_country', function(){ 
+  var selCountryId = $(this).val(); alert(selCountryId);
+  $.ajax({
+	 url: window.location.href, 
+	 cache: 'false',
+	 type: 'POST', 
+	 data: {
+			ajax: 'true',
+			controller: 'opticiansregister',
+			action: 'assignStates',
+			id: selCountryId,
+		  },
+	 success: function(result){ //console.log(result);
+		//console.log(result);
+		$('#optician_state').html(result);
+	 },
+  });
+});
+$('#opticians-register').on('submit', function(){ 
+   	if(! $('#agree_store').is(':checked')){
+		alert('Please Agree To Site Collecting Your Details'); return false;
+	}
+
+   	if(! $('#agree_terms').is(':checked')){
+		alert('Please Agree To Terms and Conditions'); return false;
+	}
+
+});
+
+</script>
+{/literal}
+
+/*controller - override/controllers/front*/
+class OpticiansRegisterController extends FrontController
+{
+    public $php_self = 'opticiansregister';
+    public $ssl = false;
+
+	/**
+	 * Initialize the controller
+	 */
+	public function init(){
+		parent::init(); //var_dump($_SERVER['REQUEST_URI']);
+
+		$this->context->smarty->assign(array(
+            'hide_left_column'    => $this->display_column_left,
+            'hide_right_column'   => $this->display_column_right,
+		));
+	}
+
+	/**
+	 * Set Media for the page
+	 *
+	 */
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
+        $this->addJS(_THEME_JS_DIR_.'contact-form.js');
+        $this->addJS(_PS_JS_DIR_.'validate.js');
+    }
+
+    /**
+    * Assign template vars related to page content
+    */
+    public function initContent()
+    {
+
+		if(Tools::getValue('ajax')){  $this->ajaxProcessAssignStates(); } 
+
+        parent::initContent();
+
+		$this->assignCountries();
+
+        $email = Tools::safeOutput(Tools::getValue('from',
+        		((isset($this->context->cookie) && isset($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email)) ? $this->context->cookie->email : '')));
+        $this->context->smarty->assign(array(
+            'errors' => $this->errors,
+            'email' => $email,
+            'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD'),
+            'max_upload_size' => (int)Tools::getMaxUploadSize()
+        ));
+
+        if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token')) {
+            $customer_thread = Db::getInstance()->getRow('
+				SELECT cm.*
+				FROM '._DB_PREFIX_.'customer_thread cm
+				WHERE cm.id_customer_thread = '.(int)$id_customer_thread.'
+				AND cm.id_shop = '.(int)$this->context->shop->id.'
+				AND token = \''.pSQL($token).'\'
+			');
+            $order = new Order((int)$customer_thread['id_order']);
+            if (Validate::isLoadedObject($order)) {
+                $customer_thread['reference'] = $order->getUniqReference();
+            }
+            $this->context->smarty->assign('customerThread', $customer_thread);
+        }
+
+        $contactKey = md5(uniqid(microtime(), true));
+        $this->context->cookie->__set('contactFormKey', $contactKey);
+
+        $this->context->smarty->assign(array(
+            'contacts' => Contact::getContacts($this->context->language->id),
+            'message' => html_entity_decode(Tools::getValue('message')),
+            'contactKey' => $contactKey,
+        ));
+
+        $this->setTemplate(_PS_THEME_DIR_.'register-opticians.tpl');
+    }
+
+
+    /**
+    * Start forms process
+    */
+    public function postProcess()
+    {
+        if (Tools::isSubmit('submitOpticianDetails')) { 
+			//var_dump($_POST); var_dump($this->context); exit;
+			/**
+			 * After submission process, create the optician i.e. supplier 
+			 * Also, create an login for supplier. 
+			 */
+			/* generate a supplier or optician */
+			$an_optician = new Supplier((int)0, $this->context->language->id);
+			$an_optician->name = Tools::getValue("optician_name", null);
+			$an_optician->active = 1; 
+			$an_optician->description = Tools::getValue("optician_desc", null);
+			$an_optician->meta_title = Tools::getValue("optician_name", null);
+			$an_optician->meta_description = Tools::getValue("optician_name", null); 
+			$opticianId = $an_optician->save();
+
+			/* generate the address of the supplier */
+			$opt_address_id=0; $id_country = 17; $id_state = 0;
+			$opt_address = new Address(); 
+            $opt_address->alias = Tools::getValue('optician_name', null);
+            $opt_address->lastname = 'supplier'; // skip problem with numeric characters in supplier name
+            $opt_address->firstname = 'supplier'; // skip problem with numeric characters in supplier name
+            $opt_address->address1 = Tools::getValue("optician_address1", null);
+            $opt_address->address2 = Tools::getValue("optician_address2", null);
+            $opt_address->postcode = Tools::getValue("optician_zip", null);
+            $opt_address->phone = Tools::getValue("optician_phone", null);
+            $opt_address->phone_mobile = Tools::getValue("optician_mphone", null);
+            $opt_address->id_country = (int)Tools::getValue("optician_country", null);
+            $opt_address->id_state = (int)Tools::getValue("optician_state", null);
+            $opt_address->city = Tools::getValue("optician_city", null);
+			$opt_address->id_supplier = $opticianId;
+			/* validate the address */
+            $validation = $opt_address->validateController();
+            // checks address validity
+            if (count($validation) > 0) {
+                foreach ($validation as $item) {
+                    $this->errors[] = $item;
+                }
+                $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
+			} else {
+				 $opt_address_id = $opt_address->save();
+			}
+
+			/*generate a login for the supplier */
+			$opt_employee = new Employee((int)0);  
+			if(strstr($_POST["optician_name"], ' ')){ 
+				$names = explode(' ', $_POST["optician_name"], 2); 
+				$opt_employee->lastname = $names[1];
+				$opt_employee->firstname = $names[0];
+			}else{
+				$opt_employee->lastname = $_POST["optician_name"];
+				$opt_employee->firstname = $_POST["optician_name"];
+			}
+			//remove special characters from name
+			$email_namestring = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST["optician_name"]); 
+			$opt_employee->email = strtolower('s').'_'.strtolower($email_namestring).'@contactplus.com';
+			$opt_employee->passwd = Tools::encrypt('password1234'); 
+			$opt_employee->id_lang = 1; $opt_employee->id_profile = 4; 
+			$opt_employee->default_tab = 1; 
+			$opt_employee->add(); 
+
+            if (count($this->errors) > 1) {
+            	array_unique($this->errors);
+            } elseif (!count($this->errors)) {
+            	$this->context->smarty->assign('confirmation', 1);
+            }
+
+        }
+    }
+
+    /**
+     * Assign template vars related to countries display
+     */
+    protected function assignCountries()
+    {
+        $curr_id_country = (int)$this->context->country->id;
+        // Generate countries list
+        if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
+            $countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
+        } else {
+            $countries = Country::getCountries($this->context->language->id, true);
+        }
+
+        // @todo use helper
+        $list = '';
+        foreach ($countries as $country) {
+            $selected = ((int)$country['id_country'] === $curr_id_country) ? ' selected="selected"' : '';
+            $list .= '<option value="'.(int)$country['id_country'].'"'.$selected.'>'.htmlentities($country['name'], ENT_COMPAT, 'UTF-8').'</option>';
+        }
+
+        // Assign vars
+        $this->context->smarty->assign(array(
+            'countries_list' => $list,
+            'countries' => $countries,
+            'sl_country' => (int)$curr_id_country,
+        ));
+    }
+
+
+    /**
+     * Return States pertaining to the country
+     */
+    protected function ajaxProcessAssignStates() 
+    {
+        $curr_id_country = (int)Tools::getValue('id'); 
+		$states = State::getStatesByIdCountry($curr_id_country); //var_dump($states);
+		$html = '';
+		$html .= '<option value="0" selected="selected"> -- Choose State -- </option>';
+
+		if(!empty($states)){
+		  foreach($states as $state){
+			$html .= '<option value="'.(int)$state['id_state'].'">'.htmlentities($state['name'], ENT_COMPAT, 'UTF-8').'</option>';
+		  }
+		}
+		die($html);
+    }
+}
+
+
+
+===================================================================================
+
 /* corresponding template - themes/default-bootstrap/register-opticians.tpl*/
 <p> CONTENT FROM REGISTER OPTICIANS TEMPLATE </p>
 
