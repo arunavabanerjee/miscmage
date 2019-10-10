@@ -1,0 +1,99 @@
+//type1:
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$catId = 49; // Parent Category ID
+$subcategory = $objectManager->create('Magento\Catalog\Model\Category')->load($catId);
+$subcats = $subcategory->getChildrenCategories();
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+?>
+<div class="mid_container our_cat">
+<ul class="sub-cat"><div class="products-grid grid">
+<ol class="product-items widget-product-grid">
+<?php
+foreach ($subcats as $subcat) {
+$_category = $objectManager->create('Magento\Catalog\Model\Category')->load($subcat->getId());
+$_outputhelper = $this->helper('Magento\Catalog\Helper\Output');
+$subcaturl = $subcat->getUrl();
+$_imgHtml = '';
+if ($_imgUrl = $_category->getImageUrl()) {
+$_imgHtml = '<img src="' . $_imgUrl . '" width="350" height="357" />';
+$_imgHtml = $_outputhelper->categoryAttribute($_category, $_imgHtml, 'image');
+} ?>
+
+<li class="product-item"> 
+<div class="product-item-info">
+    <a href="<?php echo $subcaturl ?>" class="product-item-photo">
+        <span class="product-image-container" >
+            <span class="product-image-wrapper">
+                <?php echo $_imgHtml;?>
+                	<span class="cat_title"> <?php echo $subcat->getName(); ?> </span>
+                </span>
+        </span>
+    </a>
+
+</div>
+</li>       
+<?php } ?>
+</ol>
+    </div>
+</div>
+====================================
+//type2 
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); $catId = 2; //Parent Category ID
+$maincategory = $objectManager->create('Magento\Catalog\Model\Category')->load($catId);
+$subcats = $maincategory->getChildrenCategories();
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+?>
+<section class="categorysection may-60">
+<div class="container">
+<div class="row m-0">
+    <?php 
+    $count = 1; foreach ($subcats as $subcat) {
+    $_category = $objectManager->create('Magento\Catalog\Model\Category')->load($subcat->getId());
+    $_outputhelper = $this->helper('Magento\Catalog\Helper\Output'); $subcaturl = $subcat->getUrl();
+    /*$_imgHtml = '';
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<img src="' . $_imgUrl . '" width="350" height="357" />';
+        $_imgHtml = $_outputhelper->categoryAttribute($_category, $_imgHtml, 'image'); 
+    }*/	
+    ?>
+	<?php if ($count == 1){ ?>   
+    <div class="col-sm-6 p-0">
+    	    <a href="<?php echo $subcaturl ?>" title="">
+    	        <img src="<?php echo $this->getViewFileUrl('images/category1.jpg');?>" class="img-fluid" title="" alt="" data-pagespeed-url-hash="3988947895"/>
+    	    </a>
+    </div>
+    <?php } ?>
+    
+    <?php if ($count == 2){ ?>
+	<div class="col-sm-6 p-0">
+		    <a href="<?php echo $subcaturl ?>" title="">
+		        <img src="<?php echo $this->getViewFileUrl('images/category2.jpg');?>" class="img-fluid" title="" alt="" data-pagespeed-url-hash="4283447816"/>
+		    </a>
+	</div>
+	<?php } ?>
+	
+	<?php if ($count == 3){ ?>
+	<div class="col-sm-6 p-0">
+		    <a href="<?php echo $subcaturl ?>" title="">
+		        <img src="<?php echo $this->getViewFileUrl('images/category3.jpg');?>" class="img-fluid" title="" alt="" data-pagespeed-url-hash="282980441"/>
+		    </a>
+	</div>
+	<?php } ?>
+	
+	<?php if ($count == 4){ ?>
+	<div class="col-sm-6 p-0">
+		    <a href="<?php echo $subcaturl ?>" title="">
+		        <img src="<?php echo $this->getViewFileUrl('images/category4.jpg');?>" class="img-fluid" title="" alt="" data-pagespeed-url-hash="577480362"/>
+		    </a>
+	</div>
+	<?php } ?>
+	
+	<?php if($count == 4){ break; } 
+	    } //foreach ($subcats as $subcat) ?>
+</div>
+</div>	
+</section>
+
+
