@@ -1,4 +1,131 @@
+Adding a custom jquery in template
+-----------------------------------
+1. Copy owl.carousel.js to - app/design/frontend/<pakage_name>/<theme_name>/web/js/owl-carousel/
+2. Add requirejs config to app/design/frontend/<pakage_name>/<theme_name>/requirejs-config.js.
+var config = {
+    map: {
+        '*': {
+            'carousel': 'js/carousel',
+            'owlCarousel': 'js/owl-carousel/owl.carousel'
+        }
+    }
+};
+3. Add your requirejs module - app/design/frontend/<pakage_name>/<theme_name>/web/js/carousel.js 
+define([
+    'jquery',
+    'owlCarousel'
+], function($) {
+    return function(config, element) {
+        $(element).owlCarousel(config);
+    };
+});
+4. How to use:
+use the data-mage-init attribute to insert Owl Carousel in a certain element:
+<div class="owl-carousel" data-mage-init='{"carousel":{"option": value}}'>
+    <div class="item">Item 1</div>
+    ...
+    <div class="item">Item n</div>
+</div>
+use with <script type="text/x-magento-init" />:
+<div id="owl-carousel" class="owl-carousel">
+    <div class="item">Item 1</div>
+    ...
+    <div class="item">Item n</div>
+</div>
 
+<script type="text/x-magento-init">
+{
+    "#owl-carousel": {
+        "carousel": {"option": value}
+    }
+}
+</script>
+----------------------------------------------
+1. themename/themename/Magento_Theme/web/js/owl.carousel.js
+2. mapping for the file in themename/themename/Magento_Theme/requirejs-config.js
+var config = {
+    map: {
+        '*': {
+            owlcarouselslider:        'Magento_Theme/js/owl.carousel'
+        }
+    }
+};
+3. themename/themename/Magento_Catalog/templates/product/bestseller_list.phtml 
+<script>
+    require([
+        'jquery',
+        'owlcarouselslider'
+        ], function () {
+            'use strict';
+            jQuery.noConflict();
+                jQuery(".best-seller-carousel").owlCarousel({
+                autoPlay: 3000, //3000 Set AutoPlay to 3 seconds
+                margin:5,
+                items : 5,
+                itemsDesktop : [1199,5],
+                itemsDesktopSmall : [979,5],
+                itemsTablet : [768,5],
+                navigation : true,
+                pagination : false
+          });
+    });
+</script>
+4. For that structure should be as below,
+<div id="demo">
+<div id="owl-demo" class="best-seller-carousel">
+    <div class="item"><h1>1</h1></div>
+    <div class="item"><h1>2</h1></div>
+    <div class="item"><h1>3</h1></div>
+    <div class="item"><h1>4</h1></div>
+    <div class="item"><h1>5</h1></div>
+    <div class="item"><h1>6</h1></div>
+    <div class="item"><h1>7</h1></div>
+    <div class="item"><h1>8</h1></div>
+</div>
+</div>
+----------------------------------------------------------
+First Add owlcarousel.js file inside - app/design/frontend/pakage_name/theme_name/Magento_Catalog/web/js 
+Add your css inside, - app/design/frontend/pakage_name/theme_name/Magento_Catalog/web/css
+call css inside your tempalte file using, - 
+<link rel="stylesheet" type="text/css" href="<?php echo $block->getViewFileUrl('Magento_Catalog::css/owlcarousel.css')?>">
+Now create requirejs-config.js file - Magento_Catalog/requirejs-config.js
+var config = {
+    paths: {            
+            'owlcarousel': "Magento_Catalog/js/owlcarousel"
+        },   
+    shim: {
+        'owlcarousel': {
+            deps: ['jquery']
+        }
+    }
+};
+Now you can use owlcarousel under any phtml file,
+<div id="owlslider" class="products list items product-items">
+   <ul>
+     <li>1</li>
+     <li>2</li>
+     <li>3</li>
+     <li>4</li>
+     <li>5</li>       
+  </ul>
+</div>
+    <script>
+    (function  () {
+        require(["jquery","owlcarousel"],function($) {
+            $(document).ready(function() {
+                $("#owlslider").owlCarousel({
+                    navigation : true, // Show next and prev buttons
+                    autoPlay: false, //Set AutoPlay to 3 seconds 
+                    items : 5
+                });
+            });
+        });
+    })();
+    </script>
+
+
+
+==============================================================================================
 Custom Image in template: 
 --------------------------
 a. Put your image on Your Magento 2 Path: /app/design/frontend/< Vendor >/< theme >/web/images
