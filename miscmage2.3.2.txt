@@ -1,3 +1,35 @@
+
+Add custom js in a theme:
+--------------------------
+To add a js in theme via Requirejs: 
+Supposing that your js file is: myfile.js - app/design/frontend/{Vendor}/{theme}/requirejs-config.js
+var config = {
+    map: {
+        '*': {
+            myscript: 'js/myfile'
+        }
+    }
+};
+app/design/frontend/{Vendor}/{theme}/web/js/myfile.js
+define(['jquery'], function($){
+   "use strict";
+       return function myscript()
+       {
+           alert('hello myscript');
+           //put all your myfile js code here
+       }
+});
+
+app/design/frontend/{Vendor}/{theme}/Magento_Theme/templates/{yourfile}.phtml
+<script type="text/javascript">
+    require(['jquery', 'myscript'], function($, myscript) {
+        myscript();
+    });
+</script>
+
+
+
+
 Adding a custom jquery in template
 -----------------------------------
 1. Copy owl.carousel.js to - app/design/frontend/<pakage_name>/<theme_name>/web/js/owl-carousel/
