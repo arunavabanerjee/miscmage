@@ -1,3 +1,47 @@
+
+Custom Image in template: 
+--------------------------
+a. Put your image on Your Magento 2 Path: /app/design/frontend/< Vendor >/< theme >/web/images
+b. Use this code to call the image in phtml file: echo $block->getViewFileUrl('images/demo.jpg'); 
+----
+a. app/design/frontend/<Vendor>/<theme>/Magento_Newsletter/web/images/envelope.png 
+b. in app/design/frontend/<Vendor>/<theme>/Magento_Newsletter/templates/subscribe.phtml 
+$this->getViewFileUrl('Magento_Newsletter::images/envelope.png'); 
+----
+$imageUrl = $this->helper('Magento\Catalog\Helper\Image')
+                        ->init($mainProduct, 'product_base_image')
+                        ->constrainOnly(TRUE)
+                        ->keepAspectRatio(TRUE)
+                        ->keepTransparency(TRUE)
+                        ->keepFrame(FALSE)
+                        ->resize(281, 281)->getUrl();
+----
+<?php
+// get contents of a file into a string
+$filename = "path/to/image.jpg";
+$handle = fopen($filename, "r");
+$contents = fread($handle, filesize($filename));
+$imagedata = base64_encode($content);
+fclose($handle);
+?>
+
+<img src="data:image/jpeg;base64, <?= $imagedata; ?>" alt="alt text" />
+------
+a. Company/Module/view/frontend/web/images/image-icon.png
+b. <img src='<?php echo $this->getViewFileUrl('Company_Module::images/image-icon.png'); ?>' alt="image-icon" width="30" height="25">
+------ 
+Image in magento theme directory:
+a. <img src="{{view url="images/slide-bg.jpg"}}" alt="test" /> -- cms block
+b. <img src='<?php echo $this->getViewFileUrl('images/footer-logo.png'); ?>' alt="Demo">
+
+
+Template called in cms block:
+-------------------------------
+{{block class="Magento\Framework\View\Element\Template" template="Vendor_Module::myfiles/myfile.phtml"}}
+
+
+
+-----------------
 Luma:
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 <body>
