@@ -1,4 +1,71 @@
 
+Banner slider On Homepage using owl
+------------------------------------
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+// homepagebanner.phtml
+?>
+<div class="bannersection">
+    <div class="owl-carousel" id="homebanner">
+	<div class="item">
+	    <img src="<?php echo $this->getViewFileUrl('Magento_Theme::images/banner1.jpg');?>" class="img-fluid" alt="" title="" data-pagespeed-url-hash="47625573"/>
+	</div>
+	<div class="item">
+	    <img src="<?php echo $this->getViewFileUrl('Magento_Theme::images/banner2.jpg');?>" class="img-fluid" alt="" title="" data-pagespeed-url-hash="342125494"/>
+	</div>
+	<div class="item">
+	    <img src="<?php echo $this->getViewFileUrl('Magento_Theme::images/banner3.jpg');?>" class="img-fluid" alt="" title="" data-pagespeed-url-hash="636625415"/>
+	</div>
+	<div class="item">
+	    <img src="<?php echo $this->getViewFileUrl('Magento_Theme::images/banner4.jpg');?>" class="img-fluid" alt="" title="" data-pagespeed-url-hash="931125336"/>
+	</div>
+    </div>			
+</div>
+
+<script>
+require([ 'jquery', 'owl.carousel.min'], function ($) {
+    var homebanner = $('#homebanner');
+    if(homebanner.length) {
+        homebanner.owlCarousel({
+            loop:true, 
+            nav:false,
+            dots:false,
+            margin: 0,
+            autoplay:true,
+            animateOut: 'fadeOut',
+            autoplayTimeout:4000,
+            smartSpeed:1200,
+            autoplayHoverPause:true,
+            lazyLoad:true,
+            responsive: {
+                  0: { items: 1 },
+                600: { items: 1 },
+                1000: { items: 1 }
+            }
+      });  
+    } 
+    /*jquery(".best-seller-carousel").owlCarousel({
+                autoPlay: 3000, //3000 Set AutoPlay to 3 seconds
+                margin:5,
+                items : 5,
+                itemsDesktop : [1199,5],
+                itemsDesktopSmall : [979,5],
+                itemsTablet : [768,5],
+                navigation : true,
+                pagination : false,
+    });*/
+});
+</script>
+
+
+
+
+
+=================================================================================================
 Add custom js in a theme:
 --------------------------
 To add a js in theme via Requirejs: 
@@ -26,9 +93,6 @@ app/design/frontend/{Vendor}/{theme}/Magento_Theme/templates/{yourfile}.phtml
         myscript();
     });
 </script>
-
-
-
 
 Adding a custom jquery in template
 -----------------------------------
