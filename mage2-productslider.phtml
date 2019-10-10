@@ -1,0 +1,145 @@
+//type1
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$catId = 43; // Parent Category ID
+
+$category = $objectManager->create('Magento\Catalog\Model\Category')->load($catId);
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$bookcollection = $productCollection->create()->addCategoryFilter($category)->load();
+?>
+<div class="our_art">
+    <div class="content-heading">
+        <h2 class="title">Art Work</h2>
+    </div>
+    <div class="mid_container">
+        <div id="owl-demo-art" class="owl-carousel">
+        <?php foreach ($bookcollection as $fproduct) { ?>
+            <?php
+            $product = $objectManager->create('Magento\Catalog\Model\Product')->load($fproduct->getData('entity_id'));
+            $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+            $formattedPrice = $priceHelper->currency($product->getPrice(), true, false);
+            $imagewidth = 269;
+            $imageheight = 384;
+            $imageHelper = $objectManager->get('\Magento\Catalog\Helper\Image');
+            $image_url = $imageHelper->init($product, 'product_page_image_small')
+                            ->setImageFile($product->getFile())
+                            ->resize($imagewidth, $imageheight)->getUrl();
+            ?>
+        <div class="item"><a href="<?php echo $product->getProductUrl(); ?>"><img src="<?php echo $image_url; ?>" alt="Owl Image"></a></div> 
+                                             
+        <?php } ?>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#owl-demo-art": {
+            "OwlCarousel": {
+                "navigation" : true,
+                "autoPlay": 4000,
+                "pagination": false,
+                "navigationText" : ["<i class='fa fa-angle-left'> </i>","<i class='fa fa-angle-right'> </i>"],
+                "items": 4,
+                "itemsDesktop": [1199, 3],
+                "itemsDesktopSmall": [979, 3]
+            }
+        }
+    }
+</script>
+===============================================
+//type2
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$catId = 44; // Parent Category ID
+
+$category = $objectManager->create('Magento\Catalog\Model\Category')->load($catId);
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$bookcollection = $productCollection->create()->addCategoryFilter($category)->load();
+?>
+<div class="our_photography">
+    <div class="content-heading">
+        <h2 class="title">Photography</h2>
+    </div>
+    <div class="mid_container">
+        <div id="owl-demo-photo" class="owl-carousel">
+        <?php foreach ($bookcollection as $fproduct) { ?>
+            <?php
+            $product = $objectManager->create('Magento\Catalog\Model\Product')->load($fproduct->getData('entity_id'));
+            $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+            $formattedPrice = $priceHelper->currency($product->getPrice(), true, false);
+            $imagewidth = 269;
+            $imageheight = 384;
+            $imageHelper = $objectManager->get('\Magento\Catalog\Helper\Image');
+            $image_url = $imageHelper->init($product, 'product_page_image_small')
+                            ->setImageFile($product->getFile())
+                            ->resize($imagewidth, $imageheight)->getUrl();
+            ?>
+        <div class="item"><a href="<?php echo $product->getProductUrl(); ?>"><img src="<?php echo $image_url; ?>" alt="Owl Image"></a></div> 
+                                             
+        <?php } ?>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#owl-demo-photo": {
+            "OwlCarousel": {
+                "navigation" : true,
+                "autoPlay": 5000,
+                "pagination": false,
+                "navigationText" : ["<i class='fa fa-angle-left'> </i>","<i class='fa fa-angle-right'> </i>"],
+                "items": 4,
+                "itemsDesktop": [1199, 3],
+                "itemsDesktopSmall": [979, 3]
+            }
+        }
+    }
+</script>
+=====================================================================
+//type3
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$catId = 41; // Parent Category ID
+
+$category = $objectManager->create('Magento\Catalog\Model\Category')->load($catId);
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$bookcollection = $productCollection->create()->addCategoryFilter($category)->load();
+?>
+<div class="mid_container our_ebook">
+    <div id="owl-demo" class="owl-carousel">
+        <?php foreach ($bookcollection as $fproduct) { ?>
+            <?php
+            $product = $objectManager->create('Magento\Catalog\Model\Product')->load($fproduct->getData('entity_id'));
+            $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+            $formattedPrice = $priceHelper->currency($product->getPrice(), true, false);
+            $imagewidth = 269;
+            $imageheight = 384;
+            $imageHelper = $objectManager->get('\Magento\Catalog\Helper\Image');
+            $image_url = $imageHelper->init($product, 'product_page_image_small')
+                            ->setImageFile($product->getFile())
+                            ->resize($imagewidth, $imageheight)->getUrl();
+            ?>
+        <div class="item"><a href="<?php echo $product->getProductUrl(); ?>"><img src="<?php echo $image_url; ?>" alt="Owl Image"></a></div> 
+                                             
+        <?php } ?>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#owl-demo": {
+            "OwlCarousel": {
+                "navigation" : true,
+                "autoPlay": 3000,
+                "pagination": false,
+                "navigationText" : ["<i class='fa fa-angle-left'> </i>","<i class='fa fa-angle-right'> </i>"],
+                "items": 4,
+                "itemsDesktop": [1199, 3],
+                "itemsDesktopSmall": [979, 3]
+            }
+        }
+    }
+</script>
+
+
