@@ -1,0 +1,60 @@
+<?php
+//{{block type="core/template" template="html/featured.phtml" block_id="100"}}
+//<p>{{widget type="Magento\Cms\Block\Widget\Block" template="widget/static_block/default.phtml" block_id="23"}}</p>
+//<p>{{block type="Magento\Cms\Block" template="widget/static_block/default.phtml" block_id="23"}}</p>
+//{{block class="Magento\Framework\View\Element\Template" template="Vendor_Module::myfiles/myfile.phtml"}}
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$featuredcollection = $productCollection->create()
+        ->addAttributeToFilter('featured', 1)
+        ->addAttributeToFilter('status', 1)
+        ->load();
+?>
+<div class="mid_container our_demo">
+<div class="products-grid grid">
+<ol class="product-items widget-product-grid">
+<?php foreach ($featuredcollection as $fproduct) { ?>
+    <?php
+    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($fproduct->getData('entity_id'));
+    $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+    $formattedPrice = $priceHelper->currency($product->getPrice(), true, false);
+    $imagewidth = 261;
+    $imageheight = 256;
+    $imageHelper = $objectManager->get('\Magento\Catalog\Helper\Image');
+    $image_url = $imageHelper->init($product, 'product_page_image_small')
+                    ->setImageFile($product->getFile())
+                    ->resize($imagewidth, $imageheight)->getUrl();
+    ?>
+        
+            <li class="product-item"> 
+                <div class="product-item-info">
+                    <a href="<?php echo $product->getProductUrl(); ?>" class="product-item-photo">
+
+                        <span class="product-image-container">
+                            <span class="product-image-wrapper">
+                                <img class="product-image-photo" src="<?php echo $image_url; ?>" alt="Fusion Backpack" width="<?php echo $imagewidth; ?>" height="<?php echo $imageheight; ?>">
+                                 <em>Read</em>
+                            </span>
+
+
+                        </span>
+                    </a>
+                    <div class="product-item-details">
+                        <strong class="product-item-name">
+                            <a title="Fusion Backpack" href="<?php echo $product->getProductUrl(); ?>" class="product-item-link">
+                               <?php echo $product->getName(); ?> </a>
+                        </strong>
+                       
+
+                       
+                    </div>
+                </div>
+            </li>                                  
+
+<?php } ?>
+ </ol>
+    </div>
+
+</div>
+
