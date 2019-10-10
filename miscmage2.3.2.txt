@@ -1,3 +1,56 @@
+CMSblock from admin:
+<section class="ourbenifits may-60">
+<div class="container">
+<div class="row">
+<div class="col-sm-12 mab-40">
+<h2 class="font-even-40 position-relative text-center text-uppercase themetitle mab-30 pab-30">Onze voordelen</h2>
+</div>
+<div class="col-12">
+<div class="beniftlist pay-60 position-relative">
+<ul class="row">
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits1.png'}}" alt="" data-pagespeed-url-hash="2910363029"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">Sieradenverzekering</h4>
+</div>
+</li>
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits2.png'}}" alt="" data-pagespeed-url-hash="3204862950"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">Kwaliteitsgarantie</h4>
+</div>
+</li>
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits3.png'}}" alt="" data-pagespeed-url-hash="3499362871"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">14 dagen retour</h4>
+</div>
+</li>
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits4.png'}}" alt="" data-pagespeed-url-hash="3793862792"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">Sinds 1977</h4>
+</div>
+</li>
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits5.png'}}" alt="" data-pagespeed-url-hash="4088362713"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">Aangesloten bij NJU en VGZ, Inhouse IGI Diamond Grader</h4>
+</div>
+</li>
+<li class="col-xl-2 col-md-4 col-sm-4 col-6">
+<div class="blistinner">
+<div class="blistimg text-center"><img class="img-fluid" title="" src="{{view url='Magento_Theme::images/benifits6.png'}}" alt="" data-pagespeed-url-hash="87895338"></div>
+<h4 class="font-odd-13 text-black benifitstiele text-uppercase text-center">Wereldwijd verzending</h4>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+
 
 Banner slider On Homepage using owl
 ------------------------------------
